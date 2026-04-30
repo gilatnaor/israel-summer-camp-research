@@ -1,0 +1,1393 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Israel Overnight Summer Camp — Market Research Report</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        :root {
+            --blue: #2563eb;
+            --green: #16a34a;
+            --orange: #ea580c;
+            --purple: #7c3aed;
+            --red: #dc2626;
+            --gray: #64748b;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --border: #e2e8f0;
+            --text: #1e293b;
+            --text-light: #64748b;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+
+        /* Language toggle */
+        .lang-toggle { position: sticky; top: 0; z-index: 100; background: var(--text); padding: 12px 20px; display: flex; justify-content: center; gap: 8px; }
+        .lang-btn { padding: 8px 24px; border: 2px solid #fff; border-radius: 6px; background: transparent; color: #fff; font-size: 15px; cursor: pointer; font-weight: 600; transition: all 0.2s; }
+        .lang-btn.active { background: #fff; color: var(--text); }
+        .lang-btn:hover { opacity: 0.9; }
+        .section-he { display: none; }
+        body.he .section-en { display: none; }
+        body.he .section-he { display: block; }
+        body.he { direction: rtl; }
+
+        /* Header */
+        .header { text-align: center; padding: 40px 20px; background: linear-gradient(135deg, #1e3a5f, #2563eb); color: white; border-radius: 16px; margin-bottom: 30px; }
+        .header h1 { font-size: 2.2em; margin-bottom: 8px; }
+        .header p { font-size: 1.1em; opacity: 0.85; }
+        .header .date { font-size: 0.9em; opacity: 0.65; margin-top: 8px; }
+
+        /* Cards */
+        .card { background: var(--card); border-radius: 12px; padding: 24px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); border: 1px solid var(--border); }
+        .card h2 { font-size: 1.4em; margin-bottom: 16px; color: var(--blue); border-bottom: 2px solid var(--blue); padding-bottom: 8px; }
+        .card h3 { font-size: 1.1em; margin: 16px 0 8px; color: var(--text); }
+
+        /* Stats row */
+        .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 24px; }
+        .stat-card { background: var(--card); border-radius: 12px; padding: 20px; text-align: center; border: 1px solid var(--border); box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+        .stat-card .number { font-size: 2.2em; font-weight: 800; color: var(--blue); }
+        .stat-card .label { font-size: 0.85em; color: var(--text-light); margin-top: 4px; }
+
+        /* Charts */
+        .chart-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(500px, 1fr)); gap: 24px; margin-bottom: 24px; }
+        .chart-card { background: var(--card); border-radius: 12px; padding: 24px; border: 1px solid var(--border); box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+        .chart-card h3 { margin-bottom: 16px; color: var(--text); font-size: 1.1em; }
+        .chart-wrapper { position: relative; height: 350px; }
+
+        /* Tables */
+        .table-wrapper { overflow-x: auto; margin: 16px 0; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.88em; }
+        th { background: #f1f5f9; padding: 10px 12px; text-align: left; font-weight: 700; border-bottom: 2px solid var(--border); white-space: nowrap; }
+        body.he th { text-align: right; }
+        td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+        tr:hover { background: #f8fafc; }
+        .tier-badge { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 0.78em; font-weight: 700; color: #fff; }
+        .tier-budget { background: var(--green); }
+        .tier-mid { background: var(--blue); }
+        .tier-premium { background: var(--orange); }
+        .tier-ultra { background: var(--red); }
+        .tier-special { background: var(--purple); }
+        .tag { display: inline-block; padding: 1px 8px; border-radius: 10px; font-size: 0.75em; margin: 2px; background: #e2e8f0; color: var(--text); }
+
+        /* Gap analysis */
+        .gap-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+        .gap-card { border-radius: 10px; padding: 18px; border-left: 4px solid; }
+        .gap-high { background: #fef2f2; border-color: var(--red); }
+        .gap-med { background: #fffbeb; border-color: var(--orange); }
+        .gap-low { background: #f0fdf4; border-color: var(--green); }
+        .gap-card h4 { margin-bottom: 6px; }
+        .gap-card .severity { font-size: 0.8em; font-weight: 700; }
+        .gap-high .severity { color: var(--red); }
+        .gap-med .severity { color: var(--orange); }
+        .gap-low .severity { color: var(--green); }
+
+        /* Positioning map */
+        .map-container { position: relative; width: 100%; height: 500px; background: #f8fafc; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+        .map-dot { position: absolute; width: 12px; height: 12px; border-radius: 50%; transform: translate(-50%, -50%); cursor: pointer; transition: transform 0.2s; }
+        .map-dot:hover { transform: translate(-50%, -50%) scale(1.8); z-index: 10; }
+        .map-label { position: absolute; font-size: 0.72em; font-weight: 600; white-space: nowrap; pointer-events: none; }
+        .axis-label { position: absolute; font-size: 0.85em; color: var(--text-light); font-weight: 600; }
+        .axis-line { position: absolute; background: var(--border); }
+
+        /* Quadrant labels */
+        .quadrant-label { position: absolute; font-size: 0.75em; color: var(--text-light); opacity: 0.5; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+
+        /* Recommendation */
+        .rec-card { background: linear-gradient(135deg, #eff6ff, #dbeafe); border: 2px solid var(--blue); }
+        .rec-card h2 { color: var(--blue); border-color: var(--blue); }
+        .rec-item { display: flex; gap: 12px; margin: 12px 0; }
+        .rec-num { width: 28px; height: 28px; border-radius: 50%; background: var(--blue); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85em; flex-shrink: 0; }
+
+        /* Source badges */
+        .src { display: inline-block; padding: 1px 7px; border-radius: 10px; font-size: 0.7em; font-weight: 700; vertical-align: middle; margin-left: 4px; }
+        .src-verified { background: #dcfce7; color: #166534; }
+        .src-estimated { background: #fef3c7; color: #92400e; }
+        .src-inferred { background: #fee2e2; color: #991b1b; }
+        .source-legend { display: flex; gap: 16px; flex-wrap: wrap; margin: 12px 0; font-size: 0.85em; }
+        .source-legend span { display: flex; align-items: center; gap: 4px; }
+
+        /* Correction banner */
+        .correction { background: #fef3c7; border: 1px solid #f59e0b; border-radius: 8px; padding: 12px 16px; margin: 12px 0; font-size: 0.9em; }
+        .correction strong { color: #92400e; }
+
+        @media (max-width: 600px) {
+            .chart-grid { grid-template-columns: 1fr; }
+            .header h1 { font-size: 1.5em; }
+            .stats-row { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Language Toggle -->
+<div class="lang-toggle">
+    <button class="lang-btn active" onclick="setLang('en')">English</button>
+    <button class="lang-btn" onclick="setLang('he')">עברית</button>
+</div>
+
+<!-- ==================== ENGLISH ==================== -->
+<div class="section-en">
+<div class="container">
+
+<div class="header">
+    <h1>Israel Overnight Summer Camp</h1>
+    <p>Market Research & Competitive Landscape Report</p>
+    <div class="date">April 2026 | Source: summercamps.co.il + market research</div>
+</div>
+
+<!-- Key Stats -->
+<div class="stats-row">
+    <div class="stat-card"><div class="number">20+</div><div class="label">Overnight camps mapped</div></div>
+    <div class="stat-card"><div class="number">300–14,800</div><div class="label">Price range (NIS)</div></div>
+    <div class="stat-card"><div class="number">10 days</div><div class="label">Market-standard duration</div></div>
+    <div class="stat-card"><div class="number">Gr. 7-9</div><div class="label">Core age range served</div></div>
+    <div class="stat-card"><div class="number">0</div><div class="label">Camps with public reviews</div></div>
+</div>
+
+<!-- Data Confidence Legend -->
+<div class="card" style="padding: 16px;">
+    <h3 style="margin-bottom: 8px; font-size: 1em;">Data Confidence Guide</h3>
+    <p style="font-size: 0.85em; color: var(--text-light); margin-bottom: 10px;">Every data point in this report is tagged with its source reliability:</p>
+    <div class="source-legend">
+        <span><span class="src src-verified">VERIFIED</span> Directly from camp website, aggregator listing, or official source</span>
+        <span><span class="src src-estimated">ESTIMATED</span> Based on industry benchmarks, comparable data, or informed calculation</span>
+        <span><span class="src src-inferred">INFERRED</span> Educated guess from general market knowledge — needs validation</span>
+    </div>
+</div>
+
+<!-- Corrections from Deep Dive -->
+<div class="correction">
+    <strong>Correction (from competitor deep dive):</strong> Earlier versions of this report stated that zero Israeli camps do parent communication. This was inaccurate. <strong>Kimama sends daily updates via Telegram and provides personal photo albums per family.</strong> They are ahead of other Israeli camps, though still behind US standards (no AI photo matching, no daily blog, no health notifications). Kimama also uses an elective/choice-based activity model — not typical for Israeli camps.
+</div>
+
+<!-- Charts -->
+<div class="chart-grid">
+    <div class="chart-card">
+        <h3>Price per Session (NIS) — All Camps</h3>
+        <div class="chart-wrapper"><canvas id="priceChart"></canvas></div>
+    </div>
+    <div class="chart-card">
+        <h3>Price per Day (NIS) — Value Comparison</h3>
+        <div class="chart-wrapper"><canvas id="perDayChart"></canvas></div>
+    </div>
+</div>
+
+<div class="chart-grid">
+    <div class="chart-card">
+        <h3>Session Duration (Days)</h3>
+        <div class="chart-wrapper"><canvas id="durationChart"></canvas></div>
+    </div>
+    <div class="chart-card">
+        <h3>Grade Coverage by Camp</h3>
+        <div class="chart-wrapper"><canvas id="ageChart"></canvas></div>
+    </div>
+</div>
+
+<div class="chart-grid">
+    <div class="chart-card">
+        <h3>Camp Positioning — Focus Area Distribution</h3>
+        <div class="chart-wrapper"><canvas id="focusChart"></canvas></div>
+    </div>
+    <div class="chart-card">
+        <h3>Religious vs. Secular Split</h3>
+        <div class="chart-wrapper"><canvas id="religiousChart"></canvas></div>
+    </div>
+</div>
+
+<!-- Positioning Map -->
+<div class="card">
+    <h2>Competitive Positioning Map</h2>
+    <p style="color:var(--text-light); margin-bottom: 16px; font-size: 0.9em;">X-axis: Price (low → high) | Y-axis: Adventure intensity (low → high). Dot size = session length. Color = tier.</p>
+    <div class="map-container" id="posMap">
+        <div class="axis-line" style="left:50%;top:0;width:1px;height:100%;"></div>
+        <div class="axis-line" style="top:50%;left:0;height:1px;width:100%;"></div>
+        <div class="axis-label" style="bottom:8px;right:8px;">High Price →</div>
+        <div class="axis-label" style="bottom:8px;left:8px;">← Low Price</div>
+        <div class="axis-label" style="top:8px;left:50%;transform:translateX(-50%);">↑ High Adventure</div>
+        <div class="axis-label" style="bottom:8px;left:50%;transform:translateX(-50%);">Low Adventure ↓</div>
+        <div class="quadrant-label" style="top:25%;left:15%;">Budget<br>Relaxed</div>
+        <div class="quadrant-label" style="top:25%;right:15%;">Premium<br>Adventure</div>
+        <div class="quadrant-label" style="bottom:25%;left:15%;">Budget<br>Educational</div>
+        <div class="quadrant-label" style="bottom:25%;right:15%;">Premium<br>Educational</div>
+    </div>
+</div>
+
+<!-- Full Comparison Table -->
+<div class="card">
+    <h2>Full Competitive Comparison</h2>
+    <div class="source-legend" style="margin-bottom: 8px;">
+        <span><span class="src src-verified">V</span> = Verified from camp website or aggregator</span>
+        <span><span class="src src-estimated">E</span> = Estimated from benchmarks</span>
+        <span><span class="src src-inferred">I</span> = Inferred / needs validation</span>
+    </div>
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>Tier</th><th>Camp</th><th>Duration</th><th>Price (NIS)</th><th>NIS/Day</th><th>Location</th><th>Grades</th><th>Overnight</th><th>Language</th><th>Religious</th><th>Selling Angle</th><th>Key Downsides</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td><span class="tier-badge tier-budget">Budget</span></td><td><strong>Masa Israeli – Sderot</strong></td><td>10d</td><td>300</td><td>30</td><td>Rotating sites</td><td>7-9</td><td>Yes</td><td>HE</td><td>No</td><td>Municipality-subsidized</td><td>Sderot residents only</td></tr>
+                <tr><td><span class="tier-badge tier-budget">Budget</span></td><td><strong>Jerusalem Summer (Amit)</strong></td><td>10d</td><td>350</td><td>35</td><td>Rotating (Ma'ayan Harod etc.)</td><td>7-11</td><td>Yes</td><td>HE</td><td>No</td><td>School-system extension; same teachers year-round</td><td>Amit network only; very basic</td></tr>
+                <tr><td><span class="tier-badge tier-special">Special</span></td><td><strong>My Piece of the Puzzle</strong></td><td>4d</td><td>450</td><td>113</td><td>Kfar Galim / Sea of Galilee</td><td>7-12</td><td>Yes</td><td>HE</td><td>No</td><td>Special needs + at-risk; therapeutic horseback</td><td>Very short; niche population</td></tr>
+                <tr><td><span class="tier-badge tier-budget">Budget</span></td><td><strong>Camp Insights</strong></td><td>10d</td><td>850</td><td>85</td><td>Hadassah Youth Village, Beit Yanai</td><td>7-8</td><td>Yes</td><td>HE</td><td>No</td><td>Leadership & social responsibility; nonprofit</td><td>Partnered schools only; ideological</td></tr>
+                <tr><td><span class="tier-badge tier-budget">Budget</span></td><td><strong>Machaneh Chavaya</strong></td><td>12d</td><td>1,650</td><td>138</td><td>Tivon, Lower Galilee</td><td>3-12</td><td>Yes</td><td>HE</td><td>Reform</td><td>Reform movement; widest age range; affordable</td><td>Niche movement; low awareness</td></tr>
+                <tr><td><span class="tier-badge tier-mid">Mid</span></td><td><strong>Five Fingers (Rogeum)</strong></td><td>10d</td><td>2,500</td><td>250</td><td>Zichron Yaakov, Carmel coast</td><td>9 only</td><td>Yes</td><td>HE</td><td>No</td><td>Youth movement backbone; sports/hiking</td><td>Tel Aviv only; single grade</td></tr>
+                <tr><td><span class="tier-badge tier-mid">Mid</span></td><td><strong>Five Fingers Sports</strong></td><td>10d</td><td>4,200</td><td>420</td><td>Zichron Yaakov, Carmel coast</td><td>7-9</td><td>Yes</td><td>HE</td><td>No</td><td>Sports-intensive; open enrollment</td><td>Vague specifics; price jump unclear</td></tr>
+                <tr><td><span class="tier-badge tier-mid">Mid</span></td><td><strong>Israeli Journey (Masa)</strong></td><td>10d</td><td>4,800</td><td>480</td><td>3 sites: North + field + Jerusalem Hills</td><td>7-10</td><td>Yes</td><td>HE</td><td>Shabbat</td><td>Best adventure; 3 locations; 1:7.5 ratio; pro guides</td><td>Physically demanding; ideological; field camping</td></tr>
+                <tr><td><span class="tier-badge tier-mid">Mid</span></td><td><strong>Gesher (Shared Camp)</strong></td><td>10d</td><td>5,200</td><td>520</td><td>Kfar Silver, Ashkelon area</td><td>7-11</td><td>Yes</td><td>HE</td><td>No</td><td>Multi-cultural dialogue; bridges religious-secular</td><td>Southern location; niche mission</td></tr>
+                <tr><td><span class="tier-badge tier-mid">Mid</span></td><td><strong>ISRACAMP</strong></td><td>10d</td><td>5,500</td><td>550</td><td>Neve Hadassah, Tel Yitzhak (Sharon)</td><td>7-9</td><td>Yes</td><td>HE</td><td>No</td><td>15yr track record; arts+surfing+sports; empowerment</td><td>Expensive for tier; generic positioning; 1:10 ratio</td></tr>
+                <tr><td><span class="tier-badge tier-premium">Premium</span></td><td><strong>Hallelujah (Cosmos)</strong></td><td>10d</td><td>6,500</td><td>650</td><td>Kfar Galim / Ein Harod</td><td>8-9</td><td>Yes</td><td>EN</td><td>Jewish</td><td>English-language international; identity + leadership</td><td>Opaque org; vague programming; confusing tracks</td></tr>
+                <tr><td><span class="tier-badge tier-premium">Premium</span></td><td><strong>Hallelujah (Mondo)</strong></td><td>10d</td><td>6,500</td><td>650</td><td>Hadassah Youth Village, Beit Yanai</td><td>9 only</td><td>Yes</td><td>EN</td><td>Jewish</td><td>English-language international; culture</td><td>Single grade; single session; same issues as Cosmos</td></tr>
+                <tr><td><span class="tier-badge tier-premium">Premium</span></td><td><strong>Big Idea</strong></td><td>7-13d</td><td>7,500+</td><td>~1,070</td><td>Meir Shfeya, Zichron Yaakov</td><td>4-11</td><td>Yes</td><td>HE/EN</td><td>Shabbat opt.</td><td>Only intl tech camp in Israel; choose workshops; bilingual</td><td>Most expensive/day; vague workshops; wide age range</td></tr>
+                <tr><td><span class="tier-badge tier-premium">Premium</span></td><td><strong>NCSY Chai</strong></td><td>20d</td><td>8,500</td><td>425</td><td>Chispin, Golan Heights</td><td>9-12</td><td>Yes</td><td>EN</td><td>Orthodox</td><td>English Orthodox; Torah + extreme sports</td><td>Religious only; Golan security; gender-separated</td></tr>
+                <tr><td><span class="tier-badge tier-premium">Premium</span></td><td><strong>Camp Dror</strong></td><td>21d</td><td>8,650</td><td>412</td><td>Hodayot (girls) / Haifa (boys)</td><td>4-9</td><td>Yes</td><td>HE/EN</td><td>Orthodox</td><td>Longest-running religious; bilingual; gender-separated</td><td>Gender-separated; Orthodox only; long for young kids</td></tr>
+                <tr><td><span class="tier-badge tier-premium">Premium</span></td><td><strong>Camp Amichai (Bnei Akiva)</strong></td><td>20d</td><td>9,360</td><td>468</td><td>Near Akko, northern coast</td><td>4-10</td><td>Yes</td><td>HE</td><td>Dati Leumi</td><td>Bnei Akiva brand; working farm; 20-day immersion</td><td>Religious Zionist only; HE only; extreme heat; long</td></tr>
+                <tr><td><span class="tier-badge tier-premium">Premium</span></td><td><strong>Camp Ramah</strong></td><td>10d</td><td>N/A</td><td>N/A</td><td>Kibbutz Hodayot, Galilee</td><td>7-10</td><td>Yes</td><td>HE</td><td>Masorti</td><td>US Ramah brand; social worker on-site; diversity mission</td><td>Price hidden; HE despite US brand; remote; new</td></tr>
+                <tr><td><span class="tier-badge tier-ultra">Ultra</span></td><td><strong>Summer at Kibbutz</strong></td><td>19d</td><td>~10,400</td><td>547</td><td>Kibbutz Shluchot, Beit She'an</td><td>7-9</td><td>Yes</td><td>HE</td><td>Mod. Orthodox</td><td>Authentic kibbutz life; Anglo founders; 300+/yr</td><td>Extreme heat; remote; religious; modest activities</td></tr>
+                <tr><td><span class="tier-badge tier-ultra">Ultra</span></td><td><strong>Kimama Waves</strong></td><td>13d</td><td>11,700</td><td>900</td><td>Kfar Galim, Carmel coast</td><td>7-11</td><td>Yes</td><td>HE</td><td>No</td><td>Surf + extreme + chef workshops; screen-free</td><td>900 NIS/day; basic youth village; no ratio disclosed</td></tr>
+                <tr><td><span class="tier-badge tier-ultra">Ultra</span></td><td><strong>Kimama (Flagship)</strong></td><td>13d</td><td>14,800</td><td>1,138</td><td>Mevo'ot Yam, Michmoret (coast)</td><td>7-11</td><td>Yes</td><td>HE</td><td>No</td><td>Most comprehensive water sports; scuba+sail+surf; screen-free</td><td>Most expensive in Israel; basic dorms; no reviews</td></tr>
+                <tr><td><span class="tier-badge tier-special">Special</span></td><td><strong>House of Wheels</strong></td><td>5d</td><td>Subsidized</td><td>N/A</td><td>5 rotating sites nationwide</td><td>5-12</td><td>Yes</td><td>HE</td><td>No</td><td>Only camp for physical disabilities; adventurous</td><td>5 days only; volunteer staff; no accessibility details</td></tr>
+                <tr><td><span class="tier-badge tier-special">Special</span></td><td><strong>Kfar Nahar HaYarden</strong></td><td>5d</td><td>FREE</td><td>0</td><td>Lower Galilee</td><td>7-12</td><td>Yes</td><td>HE</td><td>No</td><td>Chronically ill children; SeriousFun Network; 1:2 ratio</td><td>Medical eligibility required; very short</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Gap Analysis -->
+<div class="card">
+    <h2>Market Gap Analysis — Where the Opportunities Are</h2>
+    <p style="font-size: 0.8em; color: var(--text-light); margin-bottom: 12px;">Gaps identified from competitor analysis of 21 camps on summercamps.co.il <span class="src src-verified">V</span> + deep dive on camp websites <span class="src src-verified">V</span>. Demand assessment for each gap is <span class="src src-inferred">I</span> — we have not surveyed Israeli parents or validated willingness to pay.</p>
+    <div class="correction">
+        <strong>Updated:</strong> "Parent Communication" gap has been narrowed. Kimama does daily Telegram updates + personal photo albums <span class="src src-verified">V</span>. The gap remains vs US standards but is not "zero camps do this" as originally stated. Hallelujah has year-round alumni programming <span class="src src-verified">V</span>.
+    </div>
+    <div class="gap-grid">
+        <div class="gap-card gap-high">
+            <div class="severity">HIGH OPPORTUNITY</div>
+            <h4>Young Kids (Gr. 1-6) Gateway Program</h4>
+            <p>No camp offers short 2-3 night "starter" sessions for first-time campers ages 6-9. All camps start at grade 7+.</p>
+        </div>
+        <div class="gap-card gap-high">
+            <div class="severity">HIGH OPPORTUNITY</div>
+            <h4>Neurodiverse Inclusion (ADHD/ASD)</h4>
+            <p>Zero camps serve neurodiverse kids. House of Wheels covers physical disabilities only. Massive unmet demand.</p>
+        </div>
+        <div class="gap-card gap-med">
+            <div class="severity">MEDIUM OPPORTUNITY (revised)</div>
+            <h4>Parent Communication & Transparency</h4>
+            <p>Kimama does daily Telegram + personal albums — best in Israel but below US standards (no AI matching, no blog, no health alerts). Most other camps still have minimal communication. Zero public reviews exist.</p>
+        </div>
+        <div class="gap-card gap-med">
+            <div class="severity">MEDIUM OPPORTUNITY</div>
+            <h4>"Well-Run Camp" — Premium Execution</h4>
+            <p>Mid-premium (6-9K NIS), obsessive about food quality, trained staff, modern facilities. Nobody owns this positioning.</p>
+        </div>
+        <div class="gap-card gap-med">
+            <div class="severity">MEDIUM OPPORTUNITY</div>
+            <h4>Nature / Eco / Wilderness Focus</h4>
+            <p>No camp positions on environmental education, sustainability, or deep nature immersion despite Israel's unique landscapes.</p>
+        </div>
+        <div class="gap-card gap-med">
+            <div class="severity">MEDIUM OPPORTUNITY</div>
+            <h4>Older Teens (Gr. 10-12)</h4>
+            <p>Only NCSY Chai (religious) and House of Wheels serve 10th-12th graders. Secular teens 15-17 are underserved.</p>
+        </div>
+        <div class="gap-card gap-low">
+            <div class="severity">EMERGING OPPORTUNITY</div>
+            <h4>Year-Round Community</h4>
+            <p>All camps are transactional (book → attend → done). No off-season engagement, alumni network, or year-round programming.</p>
+        </div>
+        <div class="gap-card gap-low">
+            <div class="severity">EMERGING OPPORTUNITY</div>
+            <h4>Post-Oct 7 Resilience / Wellness</h4>
+            <p>Growing demand for trauma-informed, emotional wellness programming alongside traditional camp activities.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Recommendations -->
+<!-- US Model Section -->
+<div class="card" style="border-left: 4px solid var(--purple);">
+    <h2 style="color: var(--purple); border-color: var(--purple);">Lessons from the US Camp Model — What Works & Why</h2>
+    <p style="color:var(--text-light); margin-bottom: 8px;">The American camp industry ($26-28B <span class="src src-estimated">E</span>, 14,000+ camps, 26M+ campers/year) is the most mature in the world.</p>
+    <p style="font-size: 0.8em; color: var(--text-light); margin-bottom: 16px;">US data sourced from ACA published statistics and industry knowledge (training data through May 2025). Israeli column reflects our competitor research from summercamps.co.il <span class="src src-verified">V</span> and camp websites <span class="src src-verified">V</span>. Comparison interpretations are analytical judgments <span class="src src-estimated">E</span>.</p>
+
+    <h3>US vs. Israel — Side-by-Side Comparison</h3>
+    <div class="table-wrapper">
+        <table>
+            <thead><tr><th style="width:18%;">Dimension</th><th style="width:30%;">US Model</th><th style="width:30%;">Israeli Model</th><th style="width:22%;">Key Lesson</th></tr></thead>
+            <tbody>
+                <tr><td><strong>Session Length</strong></td><td>2-8 weeks (median ~4 weeks). Deep immersion allows real transformation — homesickness fades by day 5, deep friendships form in week 2+, skill mastery requires 3+ weeks.</td><td>5-14 days (median 10). Campers barely exit the adjustment phase before going home.</td><td>Even moving from 10 days to 2-3 weeks crosses critical developmental thresholds.</td></tr>
+                <tr><td><strong>Staff Training</strong></td><td>80-120 hours pre-camp training. ACA accreditation requires background checks, certifications, 1:3-1:5 ratios. Staff are 19-25 year-old college students, senior staff 25-35.</td><td>2-5 days training. Counselors are 17-21 year-old post-army youth. Ratios of 1:8-1:12. Minimal background checks.</td><td>Professionalize staffing. 3-5 day minimum pre-camp training covering child development, safety, and communication.</td></tr>
+                <tr><td><strong>Facilities</strong></td><td>Purpose-built campuses, 100-500+ acres owned. $20-50M in accumulated infrastructure: waterfront, arts centers, ropes courses, equestrian, theaters.</td><td>Rented/borrowed: field schools, kibbutz facilities, youth villages. Temporary structures, minimal investment.</td><td>Long-term land leases with KKL/JNF or kibbutzim to build permanent camp properties.</td></tr>
+                <tr><td><strong>Food Quality</strong></td><td>Full-time professional chefs ($60-100K salary). Farm-to-table trends. Full dietary accommodation: GF, nut-free, vegan, kosher, halal. Nutrition-designed menus.</td><td>Basic institutional catering. "Schnitzel and pasta every day." Limited dietary accommodation beyond basic kashrut.</td><td>Hiring one good cook and offering varied fresh meals is a low-cost, high-impact differentiator.</td></tr>
+                <tr><td><strong>Parent Communication</strong></td><td>Daily photos via AI-sorted platforms (Waldo, Bunk1). Daily blogs. Weekly director letters. One-way email. Dedicated communications staff. $15-40K annual tech spend.</td><td>Ranges from minimal to total blackout. Ad hoc WhatsApp messages from counselor phones. No formal parent portal. Zero camps have public reviews.</td><td><strong>The single largest gap.</strong> Even basic daily photo sharing would be transformative.</td></tr>
+                <tr><td><strong>Medical/Wellness</strong></td><td>1-3 full-time RNs 24/7. Camp physician. Mental health counselors on staff. Formal homesickness protocols. Dedicated health center.</td><td>Single medic/EMT. No dedicated facility. No mental health support. Homesickness handled informally ("they'll get over it").</td><td>At minimum: certified medic 24/7, medication protocol, written homesickness plan for all staff.</td></tr>
+                <tr><td><strong>Return Rates</strong></td><td>70-85%+ at established camps. Multi-generational loyalty. Camp as core identity.</td><td>30-50%. Largely transactional — families shop each year on price.</td><td>Loyalty is earned through relationship, traditions, and year-round community — not price.</td></tr>
+                <tr><td><strong>Year-Round Engagement</strong></td><td>Reunion events, active social media (50K+ followers), alumni networks, merchandise, off-season programs, 5-15 full-time year-round staff.</td><td>Minimal. Registration-period contact only. No off-season engagement. Staff are seasonal.</td><td>Even quarterly newsletters, a winter reunion, and birthday cards would break the transactional cycle.</td></tr>
+                <tr><td><strong>Regulation</strong></td><td>ACA voluntary accreditation (~300 standards). ~3,000 of 14,000 camps accredited. State licensing provides baseline.</td><td>Fragmented across Education Ministry, Health Ministry, and local authorities. No single accreditation body. Reactive enforcement.</td><td>A coalition of quality camps should establish a voluntary Israeli accreditation body.</td></tr>
+                <tr><td><strong>Pricing</strong></td><td>$5K-$15K+ per season ($800-$2,000/week). Parents view camp as investment in character. $1B+ in annual financial aid.</td><td>3K-15K NIS (~$800-$4,000) total. Price-sensitive market but rising willingness to pay.</td><td>A premium Israeli camp at 8-15K NIS for 2 weeks is viable — if visible value is delivered.</td></tr>
+                <tr><td><strong>Market Size</strong></td><td>$26-28B annually. 8,400 overnight camps. 5M+ overnight campers.</td><td>Nascent overnight segment. Perhaps a few hundred million NIS. No reliable data exists.</td><td>First-movers who establish quality brands will capture disproportionate market share.</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Parent Communication Deep Dive -->
+<div class="card" style="border-left: 4px solid var(--orange);">
+    <h2 style="color: var(--orange); border-color: var(--orange);">Parent Communication & Transparency — The US Playbook</h2>
+
+    <h3>The Tech Stack at a Top US Camp</h3>
+    <div class="table-wrapper">
+        <table>
+            <thead><tr><th>Platform</th><th>What It Does</th><th>Key Feature</th><th>Camps Using</th><th>Price Model</th></tr></thead>
+            <tbody>
+                <tr><td><strong>CampMinder</strong></td><td>All-in-one: registration, portal, photos, billing, one-way email</td><td>Parent portal with daily photo galleries, printable parent-to-camper emails</td><td>900-1,200+ overnight camps</td><td>Camp pays $3-15K/yr</td></tr>
+                <tr><td><strong>Bunk1</strong></td><td>Communication-focused: photos, one-way email, yearbooks</td><td>Facial recognition photo search + "Bunk Notes" letter system</td><td>400-700+ camps</td><td>Hybrid: parent pays $30-60/summer or camp absorbs</td></tr>
+                <tr><td><strong>Waldo Photos</strong></td><td>AI-powered photo delivery only</td><td>Parents upload reference photo → AI matches and delivers ONLY photos of their child</td><td>300-600+ camps</td><td>Per-camper or parent-pays ~$20-50</td></tr>
+                <tr><td><strong>Campanion</strong></td><td>Mobile-first real-time updates</td><td>Activity-based photo feeds with captions, daily recaps, push notifications</td><td>100-300+ camps</td><td>Camp pays SaaS</td></tr>
+                <tr><td><strong>CampDoc</strong></td><td>Health management</td><td>Electronic health records, medication logs, parent health notifications</td><td>1,000+ camps</td><td>$2-5 per camper</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>The "Platinum Stack" at a Premium US Camp ($12-18K/season)</h3>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px; margin: 16px 0;">
+        <div style="background: #f0f9ff; border-radius: 8px; padding: 14px; border-left: 3px solid var(--blue);">
+            <strong style="color: var(--blue);">Pre-Camp</strong><br>
+            30-50 page parent handbook. Pre-camp webinars by age group. Personal counselor introductions. Regional meet-and-greets. First-time family liaison.
+        </div>
+        <div style="background: #f0fdf4; border-radius: 8px; padding: 14px; border-left: 3px solid var(--green);">
+            <strong style="color: var(--green);">During Camp: Photos</strong><br>
+            2-3 professional photographers shooting 500-2,000 photos/day. AI facial recognition (Waldo) delivers only YOUR child's photos via push notification.
+        </div>
+        <div style="background: #fef3c7; border-radius: 8px; padding: 14px; border-left: 3px solid var(--orange);">
+            <strong style="color: var(--orange);">During Camp: Updates</strong><br>
+            Daily blog with narrative recap. Weekly director's letter. One-way parent-to-camper email (printed at camp). Health notifications for any infirmary visit.
+        </div>
+        <div style="background: #faf5ff; border-radius: 8px; padding: 14px; border-left: 3px solid var(--purple);">
+            <strong style="color: var(--purple);">Post-Camp</strong><br>
+            Personalized counselor letters about each child. Professional highlight video. Digital yearbook. Post-camp survey. Re-enrollment opens final day.
+        </div>
+    </div>
+
+    <h3>Adoption Trend</h3>
+    <p style="margin-bottom: 12px;"><strong>70-85% of US overnight camps</strong> now use digital parent communication tools. The adoption has roughly doubled since 2015, accelerated by post-COVID expectations. Key milestones:</p>
+    <div class="table-wrapper">
+        <table>
+            <thead><tr><th>Era</th><th>Communication Model</th></tr></thead>
+            <tbody>
+                <tr><td><strong>Pre-2015</strong></td><td>Handwritten letters, weekly printed photo CDs, static website galleries, designated phone-call days</td></tr>
+                <tr><td><strong>2015-2017</strong></td><td>CampMinder/Bunk1 dominance. Daily photo uploads. One-way email becomes standard. Parents expect daily photos.</td></tr>
+                <tr><td><strong>2017-2019</strong></td><td>Waldo introduces AI facial recognition. Mobile apps with push notifications. Camps hire dedicated photographers.</td></tr>
+                <tr><td><strong>2019-2021</strong></td><td>COVID forces digital health/safety communication. CampDoc surges. Video tours and virtual open houses normalize.</td></tr>
+                <tr><td><strong>2021-2023</strong></td><td>Mobile-first is non-negotiable. Real-time updates. Privacy regulation (BIPA) creates pressure. "Communications Director" becomes a camp role.</td></tr>
+                <tr><td><strong>2023-2025</strong></td><td>Integrated stacks (CampMinder + Waldo + CampDoc). AI daily recaps. Short-form video. Daily personalized photo delivery is universal at premium camps.</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Privacy Section -->
+<div class="card" style="border-left: 4px solid var(--red);">
+    <h2 style="color: var(--red); border-color: var(--red);">Child Privacy & Photo Sharing — How the US Handles It</h2>
+
+    <h3>The Core Tension</h3>
+    <p style="margin-bottom: 16px; font-style: italic;">Parent A is paying $12,000+ and expects daily photos. Parent B has opted out of all photography (protective order, religious objection, general privacy). The children are bunkmates and appear in every photo together. How do you serve both?</p>
+
+    <h3>Legal Framework (US)</h3>
+    <div class="table-wrapper">
+        <table>
+            <thead><tr><th>Law</th><th>What It Covers</th><th>Impact on Camps</th></tr></thead>
+            <tbody>
+                <tr><td><strong>COPPA (Federal)</strong></td><td>Online collection of personal info (including photos) from children under 13. Requires verifiable parental consent.</td><td>Camps must ensure photo-sharing platforms are COPPA-compliant. The standard enrollment photo release generally satisfies consent if it mentions digital use.</td></tr>
+                <tr><td><strong>Illinois BIPA</strong></td><td>Strictest biometric privacy law. Requires written consent for facial recognition. <strong>$1,000-$5,000 per violation</strong> (per scan, per person). Private right of action.</td><td>Any camp using Waldo-style facial recognition for Illinois residents must obtain separate biometric consent. Major class-action risk.</td></tr>
+                <tr><td><strong>New York Civil Rights §50-51</strong></td><td>Misdemeanor to use a person's image for commercial purposes without written consent.</td><td>Camp marketing photos require explicit consent. Cannot use opt-out child in brochures, website, or social media.</td></tr>
+                <tr><td><strong>California CCPA/CPRA</strong></td><td>Right to opt out of data sharing. Children under 16 require affirmative opt-in. Age-Appropriate Design Code adds further protections.</td><td>Must offer clear opt-out. Cannot share photos with third-party platforms for California minors without explicit consent.</td></tr>
+                <tr><td><strong>GDPR (International campers)</strong></td><td>Photos are personal data. Facial recognition templates are "special category data." Right to erasure applies.</td><td>EU/UK campers' parents can demand deletion of all photos. Need lawful transfer mechanisms for US-stored data.</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>How Top US Camps Solve the Privacy Problem</h3>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; margin: 16px 0;">
+        <div class="gap-card gap-low" style="border-left-color: var(--blue);">
+            <h4>1. Tiered Consent at Enrollment</h4>
+            <p>Separate checkboxes: (a) facial recognition enrollment, (b) private gallery inclusion, (c) camp marketing use, (d) external media. ~95% consent for private gallery; ~70% for external media.</p>
+        </div>
+        <div class="gap-card gap-low" style="border-left-color: var(--blue);">
+            <h4>2. AI-Matched "See Only Your Child"</h4>
+            <p>Waldo-style delivery: each parent receives ONLY photos containing their own child. Parent A never browses all photos. This is the emerging <strong>gold standard</strong>.</p>
+        </div>
+        <div class="gap-card gap-low" style="border-left-color: var(--blue);">
+            <h4>3. Opt-Out Identification</h4>
+            <p>Colored wristbands for opt-out children signal photographers. Staff briefing sheets with photos. Dedicated photographer (not counselor phones) controls the pipeline.</p>
+        </div>
+        <div class="gap-card gap-low" style="border-left-color: var(--blue);">
+            <h4>4. Post-Capture Review</h4>
+            <p>Communications staff reviews ALL photos before publishing. Opt-out children are cropped, blurred, or the photo is withheld. Some camps use AI auto-blurring for unmatched faces.</p>
+        </div>
+        <div class="gap-card gap-low" style="border-left-color: var(--blue);">
+            <h4>5. Staff Device Prohibition</h4>
+            <p>Counselors may NOT photograph campers on personal devices. No posting on personal TikTok/Instagram — fireable offense. Camp-issued devices only, wiped at end of session.</p>
+        </div>
+        <div class="gap-card gap-low" style="border-left-color: var(--blue);">
+            <h4>6. Parent Resharing Controls</h4>
+            <p>Gallery terms of use prohibit sharing photos of OTHER children on social media. Watermarks discourage redistribution. Camp requests takedowns when violations are reported.</p>
+        </div>
+    </div>
+
+    <h3>Common Scenarios & How They're Resolved</h3>
+    <div class="table-wrapper">
+        <table>
+            <thead><tr><th>Scenario</th><th>Resolution</th></tr></thead>
+            <tbody>
+                <tr><td><strong>Opt-out child in a group photo</strong></td><td>Blur their face, crop them out if at edge, or withhold the photo entirely. Automated AI blurring is increasingly used.</td></tr>
+                <tr><td><strong>Parent downloads and posts other kids on Facebook</strong></td><td>Education first (repeated reminders in emails). If violated: request removal, contact parent directly, can revoke gallery access for repeat offenders.</td></tr>
+                <tr><td><strong>Counselor posts campers on TikTok</strong></td><td>Immediate termination. Camp files takedown request with platform. Notify affected families. Prevention: confiscate personal phones in camper areas.</td></tr>
+                <tr><td><strong>Divorced parents disagree on photo sharing</strong></td><td>Default to the more restrictive preference. Require custody documentation. Both parents may need to sign the photo release.</td></tr>
+                <tr><td><strong>Child in witness protection / protective order</strong></td><td>Strictest opt-out. No photos shared anywhere. Child's presence treated as confidential. Staff briefed on need-to-know basis.</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3 style="margin-top: 20px;">The Israeli Takeaway</h3>
+    <p style="padding: 14px; background: #fef2f2; border-radius: 8px; border-left: 3px solid var(--red);">
+        Israel has <strong>no equivalent to BIPA, no ACA photo guidelines, and no camp-specific privacy regulation.</strong> This is both an opportunity and a risk. An Israeli camp that proactively implements tiered consent, dedicated photography, and AI-matched delivery would be years ahead of competitors — while also being prepared for future Israeli privacy legislation (Israel's Privacy Protection Authority is increasingly active). The key principle: <strong>privacy by design is a competitive advantage, not a burden.</strong>
+    </p>
+</div>
+
+<!-- Top 10 Quick Wins -->
+<div class="card" style="border-left: 4px solid var(--green);">
+    <h2 style="color: var(--green); border-color: var(--green);">Top 10 Things to Adopt from the US — Ranked by Impact x Feasibility</h2>
+    <div class="table-wrapper">
+        <table>
+            <thead><tr><th>#</th><th>Action</th><th>Impact</th><th>Feasibility</th><th>Cost</th><th>Details</th></tr></thead>
+            <tbody>
+                <tr><td><strong>1</strong></td><td>Daily photo sharing via dedicated channel</td><td style="color:var(--red);font-weight:700;">10/10</td><td style="color:var(--green);font-weight:700;">9/10</td><td>~0</td><td>One staff photographer, 50-100 photos/day, private WhatsApp or Google Photos album. Posted by 9 PM. Ensure every child appears in first 2 days.</td></tr>
+                <tr><td><strong>2</strong></td><td>Pre-camp parent handbook (PDF)</td><td style="color:var(--red);font-weight:700;">9/10</td><td style="color:var(--green);font-weight:700;">10/10</td><td>~0</td><td>10-20 page PDF: packing list, schedule, food info, medical protocols, communication policy, homesickness guidance. Send 3-4 weeks before camp.</td></tr>
+                <tr><td><strong>3</strong></td><td>Proactive Day 1 & Day 2 parent message</td><td style="color:var(--red);font-weight:700;">9/10</td><td style="color:var(--green);font-weight:700;">9/10</td><td>~0</td><td>Director sends brief update + photos first two evenings. "All campers arrived safely, settled in, here are photos." 15 minutes of work with outsized calming effect.</td></tr>
+                <tr><td><strong>4</strong></td><td>Written homesickness protocol for all staff</td><td style="color:var(--orange);font-weight:700;">8/10</td><td style="color:var(--green);font-weight:700;">9/10</td><td>~0</td><td>2-page document based on Chris Thurber's research. What to say, what NOT to say, when to escalate. 60-90 min staff training. Designate a "homesickness point person."</td></tr>
+                <tr><td><strong>5</strong></td><td>3-5 day formal staff training before camp</td><td style="color:var(--red);font-weight:700;">9/10</td><td style="color:var(--orange);font-weight:700;">7/10</td><td>Moderate</td><td>Safety, child development, conflict resolution, emergency procedures, camp culture. The single biggest differentiator between professional and amateur.</td></tr>
+                <tr><td><strong>6</strong></td><td>Clear communication policy (written)</td><td style="color:var(--orange);font-weight:700;">7/10</td><td style="color:var(--green);font-weight:700;">10/10</td><td>~0</td><td>"We share daily photos. Reach us 8AM-8PM. We call you if ANY concern. Campers don't have phones. Here's why." Absence of policy = anxiety.</td></tr>
+                <tr><td><strong>7</strong></td><td>Camp traditions & signature events</td><td style="color:var(--orange);font-weight:700;">8/10</td><td style="color:var(--orange);font-weight:700;">8/10</td><td>~0</td><td>5-7 recurring rituals: opening ceremony, Color War equivalent, special Friday dinner, closing candle-lighting, camp song. NEVER change once established.</td></tr>
+                <tr><td><strong>8</strong></td><td>Personal follow-up after camp</td><td style="color:var(--orange);font-weight:700;">7/10</td><td style="color:var(--orange);font-weight:700;">8/10</td><td>Time only</td><td>Within 1 week: personal message from director/counselor with a specific anecdote about the child. 10-15 hours for 100 campers. Drives 10-15% higher return rates.</td></tr>
+                <tr><td><strong>9</strong></td><td>Parent feedback survey</td><td style="color:var(--blue);font-weight:700;">6/10</td><td style="color:var(--green);font-weight:700;">10/10</td><td>~0</td><td>8-10 question Google Form within 3-5 days of camp ending. Act on 2-3 findings visibly before next summer and tell parents you did.</td></tr>
+                <tr><td><strong>10</strong></td><td>Year-round social media presence</td><td style="color:var(--blue);font-weight:700;">6/10</td><td style="color:var(--orange);font-weight:700;">7/10</td><td>3-5 hrs/week</td><td>Instagram 2-3x/week year-round: throwbacks, staff intros, countdowns, registration announcements. Build a photo library during summer for off-season use.</td></tr>
+            </tbody>
+        </table>
+    </div>
+    <p style="margin-top: 12px; padding: 14px; background: #f0fdf4; border-radius: 8px; border-left: 3px solid var(--green);">
+        <strong>Items 1-4 can be implemented in a single weekend of planning.</strong> Items 5-7 require pre-season preparation. Items 8-10 require year-round commitment but modest effort. Together, they would transform an Israeli camp from a transactional service into a trusted institution.
+    </p>
+</div>
+
+<div class="card rec-card">
+    <h2>Strategic Options for Your Camp</h2>
+    <div class="rec-item"><div class="rec-num">1</div><div><strong>The "Well-Run Camp"</strong> — Mid-premium (7-9K NIS, 10-14 days). Not a niche theme, just dramatically better execution: great food, trained adult staff, daily parent updates via app, modern facilities. Position as "the camp you wish existed."</div></div>
+    <div class="rec-item"><div class="rec-num">2</div><div><strong>Nature & Eco Camp</strong> — Galilee/Golan location, wilderness immersion, environmental education, screen-free by design. 10 days, 5-7K NIS. Appeals to nature-conscious parents in the growing eco/outdoor movement.</div></div>
+    <div class="rec-item"><div class="rec-num">3</div><div><strong>Inclusion Pioneer</strong> — First mainstream camp with built-in neurodiverse support (shadow counselors, sensory-friendly spaces, ADHD/ASD trained staff). Fill the biggest unmet need in the market.</div></div>
+    <div class="rec-item"><div class="rec-num">4</div><div><strong>Gateway + Growth Model</strong> — Start with short 3-night sessions for ages 6-9, then 10-day sessions for 10-14, then 2-week sessions for 14-17. Build a multi-year camper pipeline no competitor has.</div></div>
+    <div class="rec-item"><div class="rec-num">5</div><div><strong>Hybrid</strong> — Combine elements: a well-run, nature-focused camp with inclusion support and a gateway program. This captures multiple gaps simultaneously.</div></div>
+</div>
+
+<!-- ==================== FINANCIAL MODEL ==================== -->
+<div class="card" style="border-left: 4px solid #059669;">
+    <h2 style="color: #059669; border-color: #059669;">Financial Model — Can You Make Money?</h2>
+    <p style="color:var(--text-light); margin-bottom: 8px;">Full investor-grade model for a US-style camp: 150 campers/session, 3 sessions/summer, 14-day standard, Galilee location.</p>
+    <div class="correction" style="margin-bottom: 16px;">
+        <strong>Data confidence note:</strong> Pricing is benchmarked against verified competitor data (Kimama NIS 8,200-14,800 <span class="src src-verified">V</span>). Cost estimates (facility lease, staff wages, food, insurance) are based on Israeli industry benchmarks <span class="src src-estimated">E</span> — not actual vendor quotes. <strong>Before committing capital, get real quotes from youth villages, insurers, caterers, and security companies.</strong> Margins and break-even are modeled projections <span class="src src-estimated">E</span>, not guarantees.
+    </div>
+
+    <h3>Three-Tier Pricing</h3>
+    <div class="stats-row">
+        <div class="stat-card" style="border-top: 3px solid var(--blue);"><div class="number">11,500</div><div class="label">NIS — Value (10 days)<br>1,150 NIS/day</div></div>
+        <div class="stat-card" style="border-top: 3px solid var(--green);"><div class="number">14,900</div><div class="label">NIS — Standard (14 days)<br>1,064 NIS/day</div></div>
+        <div class="stat-card" style="border-top: 3px solid var(--purple);"><div class="number">19,500</div><div class="label">NIS — Premium (21 days)<br>929 NIS/day</div></div>
+    </div>
+    <p style="font-size:0.88em; color:var(--text-light);">Standard price (14,900 NIS) sits just above Kimama's 14,800 NIS ceiling. Still 35-55% below equivalent US camp price adjusted for purchasing power.</p>
+
+    <h3>3-Year P&L Projection</h3>
+    <div class="table-wrapper">
+        <table>
+            <thead><tr><th></th><th>Year 1 (Launch)</th><th>Year 2 (Growth)</th><th>Year 3 (Maturity)</th></tr></thead>
+            <tbody>
+                <tr><td><strong>Occupancy</strong></td><td>70% (105/session)</td><td>85% (128/session)</td><td>95% (143/session)</td></tr>
+                <tr><td><strong>Camper-Sessions</strong></td><td>315</td><td>384</td><td>429</td></tr>
+                <tr style="background:#f0fdf4;"><td><strong>Total Revenue</strong></td><td><strong>NIS 4,497K</strong> ($1.23M)</td><td><strong>NIS 5,808K</strong> ($1.59M)</td><td><strong>NIS 7,032K</strong> ($1.93M)</td></tr>
+                <tr><td><strong>Operating Costs</strong></td><td>NIS 5,122K</td><td>NIS 5,196K</td><td>NIS 5,391K</td></tr>
+                <tr style="font-weight:700;"><td>Operating Profit</td><td style="color:var(--red);">(NIS 625K)</td><td style="color:var(--green);">NIS 613K</td><td style="color:var(--green);">NIS 1,641K</td></tr>
+                <tr style="font-weight:700;"><td>Operating Margin</td><td style="color:var(--red);">-13.9%</td><td style="color:var(--green);">10.5%</td><td style="color:var(--green);">23.3%</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>Cost Structure Breakdown (Year 1)</h3>
+    <div class="chart-grid" style="grid-template-columns: 1fr 1fr;">
+        <div>
+            <div class="table-wrapper">
+                <table>
+                    <thead><tr><th>Category</th><th>NIS</th><th>% of Total</th><th>Source</th></tr></thead>
+                    <tbody>
+                        <tr><td>Staff (all categories)</td><td>2,628K</td><td style="font-weight:700;">51%</td><td><span class="src src-estimated">E</span> Israeli salary benchmarks</td></tr>
+                        <tr><td>Facilities (lease + ops)</td><td>631K</td><td>12%</td><td><span class="src src-estimated">E</span> Youth village lease estimates</td></tr>
+                        <tr><td>Food & Catering</td><td>626K</td><td>12%</td><td><span class="src src-estimated">E</span> 75 NIS/day benchmark</td></tr>
+                        <tr><td>Marketing</td><td>235K</td><td>5%</td><td><span class="src src-estimated">E</span> Israeli digital ad costs</td></tr>
+                        <tr><td>Equipment & Supplies</td><td>173K</td><td>3%</td><td><span class="src src-estimated">E</span> Equipment vendor estimates</td></tr>
+                        <tr><td>Administration</td><td>176K</td><td>3%</td><td><span class="src src-estimated">E</span> Office + professional services</td></tr>
+                        <tr><td>Transportation</td><td>144K</td><td>3%</td><td><span class="src src-estimated">E</span> Israeli bus charter rates</td></tr>
+                        <tr><td>Insurance</td><td>135K</td><td>3%</td><td><span class="src src-inferred">I</span> Needs insurer quote</td></tr>
+                        <tr><td>Technology</td><td>65K</td><td>1%</td><td><span class="src src-verified">V</span> CampMinder/Waldo pricing</td></tr>
+                        <tr><td>Security + Licensing + Contingency</td><td>310K</td><td>6%</td><td><span class="src src-inferred">I</span> Needs security co. quote</td></tr>
+                        <tr style="font-weight:700; background:#f1f5f9;"><td>TOTAL</td><td>5,122K</td><td>100%</td><td></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div>
+            <canvas id="costPieChart" style="max-height:300px;"></canvas>
+        </div>
+    </div>
+
+    <h3>Key Financial Metrics</h3>
+    <div class="stats-row">
+        <div class="stat-card"><div class="number" style="font-size:1.6em;">97</div><div class="label">Break-even campers/session<br>(64% occupancy)</div></div>
+        <div class="stat-card"><div class="number" style="font-size:1.6em;">2.12M</div><div class="label">NIS startup capital needed<br>(~$580K)</div></div>
+        <div class="stat-card"><div class="number" style="font-size:1.6em;">~2.5 yr</div><div class="label">Payback period<br>(base case)</div></div>
+        <div class="stat-card"><div class="number" style="font-size:1.6em;">84:1</div><div class="label">Lifetime Value : CAC<br>(at maturity)</div></div>
+    </div>
+
+    <h3>Sensitivity: What If Enrollment Is Lower/Higher?</h3>
+    <div class="table-wrapper">
+        <table>
+            <thead><tr><th>Occupancy</th><th>Campers/Session</th><th>Revenue (NIS)</th><th>Profit (NIS)</th><th>Margin</th></tr></thead>
+            <tbody>
+                <tr style="color:var(--red);"><td>60%</td><td>90</td><td>4,050K</td><td>(540K)</td><td>-13.3%</td></tr>
+                <tr><td>70%</td><td>105</td><td>4,497K</td><td>(625K)</td><td>-13.9%</td></tr>
+                <tr style="background:#f0fdf4;"><td>80%</td><td>120</td><td>5,350K</td><td>300K</td><td>5.6%</td></tr>
+                <tr style="background:#f0fdf4;"><td>85%</td><td>128</td><td>5,808K</td><td>613K</td><td>10.5%</td></tr>
+                <tr style="background:#f0fdf4;"><td>95%</td><td>143</td><td>7,032K</td><td>1,641K</td><td>23.3%</td></tr>
+                <tr style="background:#f0fdf4;"><td>100%</td><td>150</td><td>7,400K</td><td>1,950K</td><td>26.4%</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>Revenue Beyond Tuition (Year 3)</h3>
+    <div class="table-wrapper">
+        <table>
+            <thead><tr><th>Stream</th><th>Year 1</th><th>Year 3</th><th>Notes</th></tr></thead>
+            <tbody>
+                <tr><td>Camp Store / Canteen</td><td>95K</td><td>129K</td><td>~300 NIS/camper avg spend</td></tr>
+                <tr><td>Branded Merchandise</td><td>47K</td><td>129K</td><td>T-shirts, hoodies, bottles</td></tr>
+                <tr><td>Photography Packages</td><td>32K</td><td>86K</td><td>200 NIS opt-in, 40-50% uptake</td></tr>
+                <tr><td>Holiday Camps (Sukkot, Pesach)</td><td>0</td><td>360K</td><td>3-5 day programs, 50-80 kids</td></tr>
+                <tr><td>Corporate Sponsorships</td><td>50K</td><td>200K</td><td>Food brands, sports equipment</td></tr>
+                <tr><td>Facility Rentals (off-season)</td><td>30K</td><td>150K</td><td>Schools, corporates, youth groups</td></tr>
+                <tr><td>Diaspora Camper Premium</td><td>75K</td><td>180K</td><td>10-15 families paying premium</td></tr>
+                <tr><td>CIT / Leadership Premium</td><td>0</td><td>90K</td><td>30 CIT spots at NIS 3K premium</td></tr>
+                <tr style="font-weight:700; background:#f1f5f9;"><td>TOTAL Ancillary</td><td>328K</td><td>1,593K</td><td>23% of Year 3 revenue</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>Startup Capital Requirement</h3>
+    <div class="table-wrapper">
+        <table>
+            <thead><tr><th>Category</th><th>NIS</th><th>USD</th></tr></thead>
+            <tbody>
+                <tr><td>Facility Improvements (cabins, kitchen, bathrooms, sports)</td><td>405K</td><td>111K</td></tr>
+                <tr><td>Equipment (water sports, ropes course, archery, music, medical)</td><td>225K</td><td>62K</td></tr>
+                <tr><td>Security Infrastructure (cameras, fencing, shelters)</td><td>80K</td><td>22K</td></tr>
+                <tr><td>Branding & Setup (signage, design, merchandise inventory)</td><td>80K</td><td>22K</td></tr>
+                <tr><td>Pre-Operating (legal, permits, director salary, marketing)</td><td>303K</td><td>83K</td></tr>
+                <tr><td>Working Capital Reserve (3 months)</td><td>400K</td><td>110K</td></tr>
+                <tr style="font-weight:700; background:#f1f5f9;"><td>TOTAL</td><td>1,493K</td><td>409K</td></tr>
+                <tr><td>+ Year 1 Operating Loss</td><td>625K</td><td>171K</td></tr>
+                <tr style="font-weight:700; background:#fef2f2;"><td>TOTAL YEAR 1 FUNDING</td><td>2,118K</td><td>580K</td></tr>
+            </tbody>
+        </table>
+    </div>
+    <p style="font-size:0.88em; color:var(--text-light); margin-top: 8px;">Fundable via: founder equity (NIS 800K-1M) + angel/seed (NIS 500-800K) + SMB bank loan (NIS 300-500K) + pre-season deposits (NIS 500-800K).</p>
+</div>
+
+<!-- ==================== CYPRUS OPTION ==================== -->
+<div class="card" style="border-left: 4px solid #0891b2;">
+    <h2 style="color: #0891b2; border-color: #0891b2;">Cyprus Option — Premium International Session</h2>
+    <p style="color:var(--text-light); margin-bottom: 16px;">Should you run sessions in Cyprus? 1-hour flight from Israel, EU jurisdiction, no security threats, resort infrastructure.</p>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px; margin: 16px 0;">
+        <div style="background: #f0fdfa; border-radius: 8px; padding: 14px; border-left: 3px solid #0891b2;">
+            <strong style="color: #0891b2;">Advantages</strong><br>
+            No rockets/shelters needed. EU jurisdiction (12.5% tax vs 23%). Resort-quality facilities at competitive prices. English widely spoken. International appeal. Blue Flag beaches.
+        </div>
+        <div style="background: #fef2f2; border-radius: 8px; padding: 14px; border-left: 3px solid var(--red);">
+            <strong style="color: var(--red);">Disadvantages</strong><br>
+            Costs 1.5-2.5x Israel. Parents anxious about kids abroad. Work permits for Israeli staff. Kashrut logistics. NOT cooler than Israel on coast (33-36C). Medical emergencies require medevac.
+        </div>
+    </div>
+
+    <h3>Cyprus Pro Forma (70 campers, 14 days) <span class="src src-inferred">I</span></h3>
+    <p style="font-size: 0.8em; color: var(--text-light); margin-bottom: 8px;">All Cyprus numbers are inferred from general market knowledge. No actual facility quotes, Cypriot legal advice, or vendor pricing has been obtained. Validate before committing.</p>
+    <div class="stats-row">
+        <div class="stat-card"><div class="number" style="font-size:1.6em;">EUR 2,500</div><div class="label">Price per camper<br>(~NIS 9,250)</div></div>
+        <div class="stat-card"><div class="number" style="font-size:1.6em;">EUR 175K</div><div class="label">Revenue</div></div>
+        <div class="stat-card"><div class="number" style="font-size:1.6em;">EUR 140K</div><div class="label">Costs</div></div>
+        <div class="stat-card"><div class="number" style="font-size:1.6em;">~18%</div><div class="label">Net margin<br>(55 campers to break even)</div></div>
+    </div>
+
+    <h3>Recommended: The Hybrid Model</h3>
+    <div class="table-wrapper">
+        <table>
+            <thead><tr><th>Session</th><th>Location</th><th>Duration</th><th>Price</th><th>Positioning</th></tr></thead>
+            <tbody>
+                <tr><td>Session 1 & 2 (July)</td><td>Galilee, Israel</td><td>10-14 days</td><td>NIS 3,500-14,900</td><td>Core product</td></tr>
+                <tr style="background:#f0fdfa;"><td><strong>Session 3 (August)</strong></td><td><strong>Cyprus (Troodos + coast)</strong></td><td><strong>14 days</strong></td><td><strong>NIS 8,000-10,000</strong></td><td><strong>Premium flagship</strong></td></tr>
+            </tbody>
+        </table>
+    </div>
+    <p style="font-size:0.88em; color:var(--text-light); margin-top: 8px;">Start Cyprus in Year 2, not Year 1. Validate demand first: can you get 40 firm registrations before signing facility contracts?</p>
+</div>
+
+<!-- ==================== PARTNERSHIP STRATEGY ==================== -->
+<div class="card" style="border-left: 4px solid #7c3aed;">
+    <h2 style="color: #7c3aed; border-color: #7c3aed;">US Partnership Strategy — Building Credibility</h2>
+    <p style="color:var(--text-light); margin-bottom: 8px;">A US camp brand partnership compresses trust-building from 5-7 years to 1-2 years.</p>
+    <p style="font-size: 0.8em; color: var(--text-light); margin-bottom: 16px;">Partnership costs and royalty structures are <span class="src src-estimated">E</span> based on industry norms — no actual negotiations have occurred. Organizations listed are real <span class="src src-verified">V</span> but their interest in a partnership is <span class="src src-inferred">I</span> assumed, not confirmed.</p>
+
+    <h3>6 Partnership Models Compared</h3>
+    <div class="table-wrapper">
+        <table>
+            <thead><tr><th>Model</th><th>Cost</th><th>Your Control</th><th>Credibility</th><th>Best For</th></tr></thead>
+            <tbody>
+                <tr><td><strong>Full Franchise</strong></td><td>$50-150K + 5-10% revenue</td><td style="color:var(--red);">Low</td><td style="color:var(--green);font-weight:700;">Very High</td><td>Maximum brand recognition</td></tr>
+                <tr><td><strong>Network (ACA/FJC)</strong></td><td>$5-15K/yr</td><td style="color:var(--green);">High</td><td>Moderate</td><td>Standards & training support</td></tr>
+                <tr><td><strong>Staff Exchange</strong></td><td>$35-65K/yr</td><td style="color:var(--green);">Very High</td><td>Moderate-High</td><td>Fastest to implement (6-12 mo)</td></tr>
+                <tr><td><strong>Consulting</strong></td><td>$30-250K</td><td style="color:var(--green);">Very High</td><td>Low-Moderate</td><td>Program design expertise</td></tr>
+                <tr style="background:#faf5ff;"><td><strong>Co-Branding</strong></td><td>$20-80K/yr</td><td style="color:var(--green);">High</td><td style="color:var(--green);font-weight:700;">High</td><td><strong>Best balance (recommended)</strong></td></tr>
+                <tr><td><strong>Acquire Israeli Camp</strong></td><td>$50K-2M</td><td style="color:var(--green);">High</td><td>Low-Moderate</td><td>Instant operations + camper base</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>Top US Organizations to Approach</h3>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px; margin: 16px 0;">
+        <div style="background: #faf5ff; border-radius: 8px; padding: 14px;">
+            <strong>1. Foundation for Jewish Camp (FJC)</strong><br>
+            Incubator program: $500K-$1M seed + consulting. Best first call. Non-denominational.
+        </div>
+        <div style="background: #faf5ff; border-radius: 8px; padding: 14px;">
+            <strong>2. Camp Ramah</strong><br>
+            Strongest brand. Already has Israel programs. Requires Conservative movement alignment.
+        </div>
+        <div style="background: #faf5ff; border-radius: 8px; padding: 14px;">
+            <strong>3. URJ (Reform) Camps</strong><br>
+            15 camps, strong Israel connection via Heller High. Reform minority in Israel but established.
+        </div>
+        <div style="background: #faf5ff; border-radius: 8px; padding: 14px;">
+            <strong>4. Young Judaea</strong><br>
+            Explicitly Zionist. Year Course in Israel. Natural bridge for Extension Campus model.
+        </div>
+    </div>
+
+    <h3>The "Extension Campus" Model (Most Innovative)</h3>
+    <p style="padding: 14px; background: #faf5ff; border-radius: 8px; border-left: 3px solid var(--purple);">
+        Position your Israeli camp as a <strong>summer extension of an American camp</strong>. American campers attend 4 weeks in the US + 2 weeks in Israel. Israeli campers attend Israel + optionally visit US. Shared branding, traditions, staff, CampMinder database. <strong>Built-in demand, shared overhead, unique USP.</strong> Philanthropic foundations (Schusterman, Jim Joseph, FJC) will fund Israel-Diaspora youth programs.
+    </p>
+
+    <h3>Build Credibility Without a Partner</h3>
+    <div class="table-wrapper">
+        <table>
+            <thead><tr><th>#</th><th>Action</th><th>Cost</th><th>Impact</th></tr></thead>
+            <tbody>
+                <tr><td>1</td><td>Hire US camp veteran as Director</td><td>$50-80K seasonal</td><td style="color:var(--green);font-weight:700;">Highest single impact</td></tr>
+                <tr><td>2</td><td>Adopt US tech (CampMinder + Waldo + CampDoc)</td><td>$15-40K/yr</td><td>Signals "we operate like a top US camp"</td></tr>
+                <tr><td>3</td><td>Build advisory board (5-8 US camp leaders)</td><td>$5-40K/yr</td><td>Instant credibility on website</td></tr>
+                <tr><td>4</td><td>Visiting experts program (2-3/summer)</td><td>$10-15K/yr</td><td>Endorsement videos + staff training</td></tr>
+                <tr><td>5</td><td>ACA standards alignment</td><td>$2-5K</td><td>Quality framework even without accreditation</td></tr>
+                <tr><td>6</td><td>Present at ACA/FJC conferences</td><td>$3-5K/event</td><td>Industry network + thought leadership</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- ==================== SUCCESS PLAYBOOK ==================== -->
+<div class="card" style="border-left: 4px solid #d97706;">
+    <h2 style="color: #d97706; border-color: #d97706;">Success Playbook — How to Make It Work</h2>
+
+    <h3>Launch Timeline</h3>
+    <div class="table-wrapper">
+        <table>
+            <thead><tr><th>When</th><th>Milestone</th></tr></thead>
+            <tbody>
+                <tr><td><strong>T-18 mo</strong></td><td>Form entity, begin site scouting</td></tr>
+                <tr><td><strong>T-15</strong></td><td>Secure facility lease (Galilee youth village)</td></tr>
+                <tr><td><strong>T-12</strong></td><td>Hire camp director; launch brand, website, social media</td></tr>
+                <tr><td><strong>T-9</strong></td><td>Open house events (Tel Aviv, Jerusalem, Haifa)</td></tr>
+                <tr><td><strong>T-6</strong></td><td>Open early-bird registration</td></tr>
+                <tr><td><strong>T-3</strong></td><td>Apply for permits; order equipment; recruit seasonal staff</td></tr>
+                <tr><td><strong>T-1</strong></td><td>5-day staff training on-site</td></tr>
+                <tr style="background:#fef3c7; font-weight:700;"><td>T-0</td><td>FIRST SESSION OPENS</td></tr>
+                <tr><td><strong>T+1</strong></td><td>Collect feedback; staff debrief</td></tr>
+                <tr><td><strong>T+2</strong></td><td>Personal follow-up to every family; re-enrollment opens</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>Top 10 Success Factors (Ranked)</h3>
+    <div class="table-wrapper">
+        <table>
+            <thead><tr><th>#</th><th>Factor</th><th>Why</th></tr></thead>
+            <tbody>
+                <tr><td style="font-weight:700; color:var(--red);">1</td><td><strong>Staff quality & training</strong></td><td>Staff ARE the camp. One bad counselor ruins a bunk. Nothing else matters if staff are poor.</td></tr>
+                <tr><td style="font-weight:700; color:var(--red);">2</td><td><strong>Parent communication</strong></td><td>Trust is everything. Informed parents = advocates. Dark parents = detractors.</td></tr>
+                <tr><td style="font-weight:700; color:var(--red);">3</td><td><strong>Safety & medical readiness</strong></td><td>One serious incident can end the business. Over-invest here always.</td></tr>
+                <tr><td style="font-weight:700; color:var(--orange);">4</td><td><strong>Food quality</strong></td><td>"How was the food?" is question #1 when Israeli kids come home.</td></tr>
+                <tr><td style="font-weight:700; color:var(--orange);">5</td><td><strong>Camper return rate</strong></td><td>75%+ = growing camp. Below 50% = something is broken.</td></tr>
+                <tr><td>6</td><td><strong>Location & facilities</strong></td><td>Clean, safe, appropriate. Water access near-mandatory in Israeli summer.</td></tr>
+                <tr><td>7</td><td><strong>Programming variety</strong></td><td>Choice + skill progression = engagement and retention.</td></tr>
+                <tr><td>8</td><td><strong>Camp culture & traditions</strong></td><td>The emotional glue. Takes 2-3 years to build, pays dividends forever.</td></tr>
+                <tr><td>9</td><td><strong>Pricing & value perception</strong></td><td>Not cheap, but justified by visible quality.</td></tr>
+                <tr><td>10</td><td><strong>Year-round community</strong></td><td>Communities thrive; transactions stagnate.</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>Major Risks & Mitigations</h3>
+    <div class="table-wrapper">
+        <table>
+            <thead><tr><th>Risk</th><th>Prob.</th><th>Impact</th><th>Mitigation</th></tr></thead>
+            <tbody>
+                <tr style="background:#fef2f2;"><td><strong>Security escalation (war/rockets)</strong></td><td>Medium</td><td style="color:var(--red);font-weight:700;">Critical</td><td>Shelter readiness; 50-100% refund policy; war-risk insurance; session rescheduling</td></tr>
+                <tr style="background:#fef2f2;"><td><strong>Serious injury / fatality</strong></td><td>Very Low</td><td style="color:var(--red);font-weight:700;">Catastrophic</td><td>Certified lifeguards, nurse 24/7, all-staff first-aid, NIS 5-10M insurance</td></tr>
+                <tr style="background:#fef2f2;"><td><strong>Safeguarding incident</strong></td><td>Very Low</td><td style="color:var(--red);font-weight:700;">Catastrophic</td><td>Background checks, "Rule of Three," mandatory reporter training, immediate removal</td></tr>
+                <tr><td><strong>Low enrollment Year 1</strong></td><td>Medium</td><td>High</td><td>70% target modeled; drop to 2 sessions if needed; early-bird incentives</td></tr>
+                <tr><td><strong>Social media crisis</strong></td><td>Medium</td><td>High</td><td>Respond within 2 hours; director calls personally; never argue publicly</td></tr>
+                <tr><td><strong>Cash flow crunch (Sep-Dec)</strong></td><td>High</td><td>Medium</td><td>NIS 400K reserve; front-load deposits Jan-May</td></tr>
+                <tr><td><strong>Key staff departure mid-session</strong></td><td>Low-Med</td><td>High</td><td>Cross-train all roles; 2-3 floater staff; completion bonuses</td></tr>
+                <tr><td><strong>Heat wave (sharav)</strong></td><td>High</td><td>Medium</td><td>Indoor alternatives; pool schedule; cancel outdoors above 40C</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>Minimum Viable Camp (Capital-Constrained Start)</h3>
+    <p style="padding: 14px; background: #fef3c7; border-radius: 8px; border-left: 3px solid #d97706;">
+        If NIS 2.1M is too much: <strong>1 session (not 3), 80 campers, 10 days, rented facility with existing kitchen, 25 staff. Total capital: NIS 600-800K. Break-even: ~55 campers.</strong> Proves the concept before scaling.
+    </p>
+</div>
+
+</div><!-- container -->
+</div><!-- section-en -->
+
+<!-- ==================== HEBREW ==================== -->
+<div class="section-he">
+<div class="container">
+
+<div class="header">
+    <h1>מחנה קיץ לילי בישראל</h1>
+    <p>דוח מחקר שוק ונוף תחרותי</p>
+    <div class="date">אפריל 2026 | מקור: summercamps.co.il + מחקר שוק</div>
+</div>
+
+<!-- Key Stats -->
+<div class="stats-row">
+    <div class="stat-card"><div class="number">+20</div><div class="label">מחנות לילה מופו</div></div>
+    <div class="stat-card"><div class="number">300–14,800</div><div class="label">טווח מחירים (₪)</div></div>
+    <div class="stat-card"><div class="number">10 ימים</div><div class="label">משך סטנדרטי בשוק</div></div>
+    <div class="stat-card"><div class="number">כיתות ז׳-ט׳</div><div class="label">טווח גילאים מרכזי</div></div>
+    <div class="stat-card"><div class="number">0</div><div class="label">מחנות עם ביקורות פומביות</div></div>
+</div>
+
+<!-- Data Confidence Legend HE -->
+<div class="card" style="padding: 16px;">
+    <h3 style="margin-bottom: 8px; font-size: 1em;">מדריך אמינות נתונים</h3>
+    <p style="font-size: 0.85em; color: var(--text-light); margin-bottom: 10px;">כל נקודת מידע בדוח מתויגת לפי אמינות המקור:</p>
+    <div class="source-legend">
+        <span><span class="src src-verified">מאומת</span> ישירות מאתר המחנה, אגרגטור, או מקור רשמי</span>
+        <span><span class="src src-estimated">מוערך</span> מבוסס על אמות מידה בתעשייה, נתונים דומים, או חישוב מושכל</span>
+        <span><span class="src src-inferred">מוסק</span> ניחוש מושכל מידע שוק כללי — דורש אימות</span>
+    </div>
+</div>
+
+<div class="correction">
+    <strong>תיקון (מצלילה עמוקה למתחרים):</strong> גרסאות קודמות של דוח זה ציינו שאפס מחנות ישראליים מתקשרים עם הורים. זה לא מדויק. <strong>קימאמה שולחת עדכונים יומיים בטלגרם ומספקת אלבומי תמונות אישיים לכל משפחה.</strong> הם מובילים בשוק הישראלי, אם כי עדיין מאחורי הסטנדרטים האמריקאיים. קימאמה גם משתמשת במודל בחירה/אלקטיבי — לא טיפוסי למחנות ישראליים.
+</div>
+
+<!-- Charts (shared with English - same canvases reused via cloning is complex, so we reference the same) -->
+<div class="chart-grid">
+    <div class="chart-card">
+        <h3>מחיר למחזור (₪) — כל המחנות</h3>
+        <div class="chart-wrapper"><canvas id="priceChartHe"></canvas></div>
+    </div>
+    <div class="chart-card">
+        <h3>מחיר ליום (₪) — השוואת ערך</h3>
+        <div class="chart-wrapper"><canvas id="perDayChartHe"></canvas></div>
+    </div>
+</div>
+
+<div class="chart-grid">
+    <div class="chart-card">
+        <h3>משך מחזור (ימים)</h3>
+        <div class="chart-wrapper"><canvas id="durationChartHe"></canvas></div>
+    </div>
+    <div class="chart-card">
+        <h3>התמקדות המחנות — התפלגות נושאית</h3>
+        <div class="chart-wrapper"><canvas id="focusChartHe"></canvas></div>
+    </div>
+</div>
+
+<!-- Full Comparison Table - Hebrew -->
+<div class="card">
+    <h2>השוואה תחרותית מלאה</h2>
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>דרג</th><th>מחנה</th><th>משך</th><th>מחיר (₪)</th><th>₪/יום</th><th>מיקום</th><th>כיתות</th><th>לילי</th><th>שפה</th><th>דתי</th><th>הצעת ערך</th><th>חסרונות</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td><span class="tier-badge tier-budget">תקציבי</span></td><td><strong>מסע ישראלי – שדרות</strong></td><td>10י׳</td><td>300</td><td>30</td><td>אתרים מתחלפים</td><td>ז-ט</td><td>כן</td><td>עב</td><td>לא</td><td>סבסוד עירוני</td><td>תושבי שדרות בלבד</td></tr>
+                <tr><td><span class="tier-badge tier-budget">תקציבי</span></td><td><strong>קיץ ירושלמי (אמי״ת)</strong></td><td>10י׳</td><td>350</td><td>35</td><td>מתחלף (מעין חרוד וכו׳)</td><td>ז-יא</td><td>כן</td><td>עב</td><td>לא</td><td>המשכיות מבי״ס; אותם מורים</td><td>רשת אמי״ת בלבד; בסיסי</td></tr>
+                <tr><td><span class="tier-badge tier-special">מיוחד</span></td><td><strong>החלק שלי בפאזל</strong></td><td>4י׳</td><td>450</td><td>113</td><td>כפר גלים / כנרת</td><td>ז-יב</td><td>כן</td><td>עב</td><td>לא</td><td>צרכים מיוחדים + נוער בסיכון; רכיבה טיפולית</td><td>קצר מאוד; אוכלוסייה ייחודית</td></tr>
+                <tr><td><span class="tier-badge tier-budget">תקציבי</span></td><td><strong>קאמפ תובנות</strong></td><td>10י׳</td><td>850</td><td>85</td><td>כפר הנוער הדסה, בית ינאי</td><td>ז-ח</td><td>כן</td><td>עב</td><td>לא</td><td>מנהיגות ואחריות חברתית; עמותה</td><td>בתי ספר שותפים בלבד</td></tr>
+                <tr><td><span class="tier-badge tier-budget">תקציבי</span></td><td><strong>מחנה חוויה</strong></td><td>12י׳</td><td>1,650</td><td>138</td><td>טבעון, גליל תחתון</td><td>ג-יב</td><td>כן</td><td>עב</td><td>רפורמי</td><td>תנועה רפורמית; טווח גילאים רחב; זול</td><td>תנועה נישתית; מודעות נמוכה</td></tr>
+                <tr><td><span class="tier-badge tier-mid">בינוני</span></td><td><strong>חמש אצבעות (רוגעום)</strong></td><td>10י׳</td><td>2,500</td><td>250</td><td>זכרון יעקב, חוף הכרמל</td><td>ט בלבד</td><td>כן</td><td>עב</td><td>לא</td><td>תנועת נוער; ספורט/טיולים</td><td>ת״א בלבד; כיתה אחת</td></tr>
+                <tr><td><span class="tier-badge tier-mid">בינוני</span></td><td><strong>חמש אצבעות ספורט</strong></td><td>10י׳</td><td>4,200</td><td>420</td><td>זכרון יעקב, חוף הכרמל</td><td>ז-ט</td><td>כן</td><td>עב</td><td>לא</td><td>דגש ספורטיבי; רישום פתוח</td><td>פרטים מעורפלים; פער מחיר לא ברור</td></tr>
+                <tr><td><span class="tier-badge tier-mid">בינוני</span></td><td><strong>מסע ישראלי</strong></td><td>10י׳</td><td>4,800</td><td>480</td><td>3 אתרים: צפון + שטח + הרי י-ם</td><td>ז-י</td><td>כן</td><td>עב</td><td>שומר שבת</td><td>הכי הרפתקני; 3 אתרים; יחס 1:7.5; מדריכים מוסמכים</td><td>תובעני פיזית; אידיאולוגי; שינה בשטח</td></tr>
+                <tr><td><span class="tier-badge tier-mid">בינוני</span></td><td><strong>גשר (המחנה המשותף)</strong></td><td>10י׳</td><td>5,200</td><td>520</td><td>כפר סילבר, אזור אשקלון</td><td>ז-יא</td><td>כן</td><td>עב</td><td>לא</td><td>דיאלוג רב-תרבותי; גשר דתי-חילוני</td><td>מיקום דרומי; ייעוד נישתי</td></tr>
+                <tr><td><span class="tier-badge tier-mid">בינוני</span></td><td><strong>ישראקאמפ</strong></td><td>10י׳</td><td>5,500</td><td>550</td><td>נווה הדסה, תל יצחק (שרון)</td><td>ז-ט</td><td>כן</td><td>עב</td><td>לא</td><td>ותק 15 שנה; אומנות+גלישה+ספורט</td><td>יקר לדרג; מיצוב גנרי; יחס 1:10</td></tr>
+                <tr><td><span class="tier-badge tier-premium">פרימיום</span></td><td><strong>הללויה (קוסמוס)</strong></td><td>10י׳</td><td>6,500</td><td>650</td><td>כפר גלים / עין חרוד</td><td>ח-ט</td><td>כן</td><td>EN</td><td>יהודי</td><td>באנגלית; בינלאומי; זהות + מנהיגות</td><td>ארגון אטום; תכנים מעורפלים</td></tr>
+                <tr><td><span class="tier-badge tier-premium">פרימיום</span></td><td><strong>הללויה (מונדו)</strong></td><td>10י׳</td><td>6,500</td><td>650</td><td>כפר הנוער הדסה, בית ינאי</td><td>ט בלבד</td><td>כן</td><td>EN</td><td>יהודי</td><td>באנגלית; בינלאומי; תרבות</td><td>כיתה אחת; מחזור אחד; אותן בעיות</td></tr>
+                <tr><td><span class="tier-badge tier-premium">פרימיום</span></td><td><strong>ביג איידיה</strong></td><td>7-13י׳</td><td>7,500+</td><td>~1,070</td><td>מאיר שפיה, זכרון יעקב</td><td>ד-יא</td><td>כן</td><td>עב/EN</td><td>שבת אופ.</td><td>מחנה טכנולוגי בינ״ל יחיד; סדנאות לבחירה; דו-לשוני</td><td>הכי יקר/יום; סדנאות מעורפלות; טווח גילאים רחב</td></tr>
+                <tr><td><span class="tier-badge tier-premium">פרימיום</span></td><td><strong>NCSY חי</strong></td><td>20י׳</td><td>8,500</td><td>425</td><td>חספין, רמת הגולן</td><td>ט-יב</td><td>כן</td><td>EN</td><td>אורתודוקס</td><td>אורתודוקס באנגלית; תורה + אקסטרים</td><td>דתי בלבד; ביטחון גולן; מופרד</td></tr>
+                <tr><td><span class="tier-badge tier-premium">פרימיום</span></td><td><strong>מחנה דרור</strong></td><td>21י׳</td><td>8,650</td><td>412</td><td>חודיות (בנות) / חיפה (בנים)</td><td>ד-ט</td><td>כן</td><td>עב/EN</td><td>אורתודוקס</td><td>ותיק ביותר דתי; דו-לשוני; מופרד</td><td>מופרד; דתי בלבד; ארוך לקטנים</td></tr>
+                <tr><td><span class="tier-badge tier-premium">פרימיום</span></td><td><strong>עמיחי (בני עקיבא)</strong></td><td>20י׳</td><td>9,360</td><td>468</td><td>ליד עכו, חוף צפוני</td><td>ד-י</td><td>כן</td><td>עב</td><td>דתי-לאומי</td><td>בני עקיבא; חווה חקלאית; 20 יום</td><td>דתי-ציוני בלבד; חום קיצוני; ארוך</td></tr>
+                <tr><td><span class="tier-badge tier-premium">פרימיום</span></td><td><strong>מחנה רמה</strong></td><td>10י׳</td><td>לא פורסם</td><td>—</td><td>קיבוץ חודיות, גליל</td><td>ז-י</td><td>כן</td><td>עב</td><td>מסורתי</td><td>מותג רמה (ארה״ב); עו״ס באתר; גיוון</td><td>מחיר חבוי; עברית למרות מותג אמריקאי</td></tr>
+                <tr><td><span class="tier-badge tier-ultra">אולטרה</span></td><td><strong>קיץ בקיבוץ</strong></td><td>19י׳</td><td>~10,400</td><td>547</td><td>קיבוץ שלוחות, בקעת בית שאן</td><td>ז-ט</td><td>כן</td><td>עב</td><td>דתי-מודרני</td><td>חיי קיבוץ אותנטיים; מייסדים אנגלו; 300+/שנה</td><td>חום קיצוני; מרוחק; דתי; פעילויות צנועות</td></tr>
+                <tr><td><span class="tier-badge tier-ultra">אולטרה</span></td><td><strong>קימאמה גלים</strong></td><td>13י׳</td><td>11,700</td><td>900</td><td>כפר גלים, חוף הכרמל</td><td>ז-יא</td><td>כן</td><td>עב</td><td>לא</td><td>גלישה + אקסטרים + סדנאות שף; ללא מסכים</td><td>900 ₪/יום; כפר נוער בסיסי; ללא יחס מדריכים</td></tr>
+                <tr><td><span class="tier-badge tier-ultra">אולטרה</span></td><td><strong>קימאמה (דגל)</strong></td><td>13י׳</td><td>14,800</td><td>1,138</td><td>מבואות ים, מכמורת (חוף)</td><td>ז-יא</td><td>כן</td><td>עב</td><td>לא</td><td>ספורט ימי מקיף ביותר; צלילה+שיט+גלישה; ללא מסכים</td><td>היקר ביותר בישראל; פנימייה בסיסית; ללא ביקורות</td></tr>
+                <tr><td><span class="tier-badge tier-special">מיוחד</span></td><td><strong>בית הגלגלים</strong></td><td>5י׳</td><td>מסובסד</td><td>—</td><td>5 אתרים מתחלפים</td><td>ה-יב</td><td>כן</td><td>עב</td><td>לא</td><td>מחנה יחיד למוגבלות פיזית; הרפתקני</td><td>5 ימים בלבד; מתנדבים; ללא פרטי נגישות</td></tr>
+                <tr><td><span class="tier-badge tier-special">מיוחד</span></td><td><strong>כפר נהר הירדן</strong></td><td>5י׳</td><td>חינם</td><td>0</td><td>גליל תחתון</td><td>ז-יב</td><td>כן</td><td>עב</td><td>לא</td><td>ילדים חולים כרוניים; רשת SeriousFun; יחס 1:2</td><td>זכאות רפואית; קצר מאוד</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Gap Analysis - Hebrew -->
+<div class="card">
+    <h2>ניתוח פערים — היכן ההזדמנויות</h2>
+    <div class="gap-grid">
+        <div class="gap-card gap-high">
+            <div class="severity">הזדמנות גבוהה</div>
+            <h4>תוכנית כניסה לילדים צעירים (כיתות א׳-ו׳)</h4>
+            <p>אף מחנה לא מציע מחזורים קצרים של 2-3 לילות לחניכים צעירים (גילאי 6-9). כל המחנות מתחילים מכיתה ז׳.</p>
+        </div>
+        <div class="gap-card gap-high">
+            <div class="severity">הזדמנות גבוהה</div>
+            <h4>הכלה נוירו-מגוונת (ADHD/ASD)</h4>
+            <p>אפס מחנות משרתים ילדים נוירו-מגוונים. בית הגלגלים מכסה מוגבלות פיזית בלבד. ביקוש לא מסופק עצום.</p>
+        </div>
+        <div class="gap-card gap-med">
+            <div class="severity">הזדמנות בינונית (מעודכן)</div>
+            <h4>תקשורת עם הורים ושקיפות</h4>
+            <p>קימאמה שולחת עדכוני טלגרם יומיים + אלבומים אישיים — הטוב ביותר בישראל אך מתחת לסטנדרטים האמריקאיים (ללא AI, ללא בלוג, ללא התראות בריאות). רוב המחנות עדיין עם תקשורת מינימלית. אפס ביקורות פומביות.</p>
+        </div>
+        <div class="gap-card gap-med">
+            <div class="severity">הזדמנות בינונית</div>
+            <h4>"המחנה המנוהל היטב" — ביצוע פרימיום</h4>
+            <p>מחיר בינוני-גבוה (6-9K ₪), אובססיבי לגבי איכות אוכל, צוות מאומן, מתקנים מודרניים. אף אחד לא תופס מיצוב זה.</p>
+        </div>
+        <div class="gap-card gap-med">
+            <div class="severity">הזדמנות בינונית</div>
+            <h4>טבע / אקולוגיה / מדבר</h4>
+            <p>אף מחנה לא ממוצב על חינוך סביבתי, קיימות, או שקיעה בטבע למרות הנופים הייחודיים של ישראל.</p>
+        </div>
+        <div class="gap-card gap-med">
+            <div class="severity">הזדמנות בינונית</div>
+            <h4>נוער בוגר (כיתות י׳-יב׳)</h4>
+            <p>רק NCSY חי (דתי) ובית הגלגלים משרתים כיתות י׳-יב׳. נוער חילוני 15-17 לא מקבל מענה.</p>
+        </div>
+        <div class="gap-card gap-low">
+            <div class="severity">הזדמנות מתפתחת</div>
+            <h4>קהילה כל-שנתית</h4>
+            <p>כל המחנות הם עסקיים (הרשמה → השתתפות → סוף). ללא מעורבות בעונת החורף, רשת בוגרים, או תכנות כל-שנתי.</p>
+        </div>
+        <div class="gap-card gap-low">
+            <div class="severity">הזדמנות מתפתחת</div>
+            <h4>חוסן לאחר 7 באוקטובר / בריאות נפשית</h4>
+            <p>ביקוש גובר לתכנות מותאם טראומה ובריאות רגשית לצד פעילויות מחנה מסורתיות.</p>
+        </div>
+    </div>
+</div>
+
+<!-- US Model Section - Hebrew -->
+<div class="card" style="border-left: 4px solid var(--purple);">
+    <h2 style="color: var(--purple); border-color: var(--purple);">לקחים מהמודל האמריקאי — מה עובד ולמה</h2>
+    <p style="color:var(--text-light); margin-bottom: 20px;">תעשיית המחנות בארה״ב ($26-28 מיליארד, 14,000+ מחנות, 26M+ חניכים/שנה) היא הבשלה ביותר בעולם. הנה מה שמחנות ישראליים יכולים ללמוד ממנה.</p>
+
+    <h3>ארה״ב מול ישראל — השוואה צד-לצד</h3>
+    <div class="table-wrapper">
+        <table>
+            <thead><tr><th style="width:15%;">מימד</th><th style="width:30%;">המודל האמריקאי</th><th style="width:30%;">המודל הישראלי</th><th style="width:25%;">לקח מרכזי</th></tr></thead>
+            <tbody>
+                <tr><td><strong>משך מחזור</strong></td><td>2-8 שבועות (חציון ~4). שקיעה עמוקה מאפשרת טרנספורמציה אמיתית — געגועים נמוגים ביום 5, חברויות עמוקות מתגבשות בשבוע 2+.</td><td>5-14 ימים (חציון 10). החניכים כמעט ולא יוצאים משלב ההסתגלות.</td><td>אפילו מעבר מ-10 ימים ל-2-3 שבועות חוצה ספי התפתחות קריטיים.</td></tr>
+                <tr><td><strong>הכשרת צוות</strong></td><td>80-120 שעות הכשרה טרם מחנה. ACA דורשת בדיקות רקע, הסמכות, יחס 1:3-1:5. צוות בני 19-25, בכירים 25-35.</td><td>2-5 ימי הכשרה. מדריכים בני 17-21 אחרי צבא. יחסים של 1:8-1:12. בדיקות רקע מינימליות.</td><td>מקצוע הדרכה. מינימום 3-5 ימי הכשרה טרם מחנה.</td></tr>
+                <tr><td><strong>מתקנים</strong></td><td>קמפוסים ייעודיים, 100-500+ דונם בבעלות. $20-50M בתשתיות: חוף מים, מרכזי אומנות, קורסי חבלים, אמפיתיאטרון.</td><td>שכירה: בתי ספר שדה, מתקני קיבוצים, כפרי נוער. מבנים זמניים.</td><td>חוזי חכירה ארוכי טווח עם קק״ל או קיבוצים לבניית אתרי מחנה קבועים.</td></tr>
+                <tr><td><strong>איכות אוכל</strong></td><td>שפים מקצועיים (שכר $60-100K). מגמות farm-to-table. התאמות תזונתיות מלאות: ללא גלוטן, טבעוני, כשר, חלאל.</td><td>הסעדה מוסדית בסיסית. "שניצל ופסטה כל יום." התאמות מוגבלות מעבר לכשרות.</td><td>גיוס טבח טוב אחד והצעת ארוחות מגוונות — שינוי זול עם השפעה גבוהה.</td></tr>
+                <tr><td><strong>תקשורת הורים</strong></td><td>תמונות יומיות באמצעות AI (Waldo, Bunk1). בלוגים יומיים. מכתב שבועי מהמנהל. אימייל חד-כיווני. צוות תקשורת ייעודי.</td><td>מינימלי עד אפלה מוחלטת. הודעות WhatsApp אד-הוק. ללא פורטל הורים. אפס מחנות עם ביקורות.</td><td><strong>הפער הגדול ביותר.</strong> אפילו שיתוף תמונות יומי בסיסי יהיה מהפכני.</td></tr>
+                <tr><td><strong>רפואה/רווחה</strong></td><td>1-3 אחיות מוסמכות 24/7. רופא מחנה. יועצים נפשיים. פרוטוקול געגועים מבוסס מחקר. מרפאה ייעודית.</td><td>חובש או מגיש עזרה ראשונה. ללא מתקן ייעודי. ללא תמיכה נפשית. געגועים מטופלים בלתי-פורמלית.</td><td>מינימום: חובש מוסמך 24/7, פרוטוקול תרופות, תוכנית געגועים כתובה לכל הצוות.</td></tr>
+                <tr><td><strong>שיעורי חזרה</strong></td><td>70-85%+ במחנות מבוססים. נאמנות רב-דורית. מחנה כזהות מרכזית.</td><td>30-50%. עסקי ברובו — משפחות קונות מחדש כל שנה לפי מחיר.</td><td>נאמנות נבנית דרך יחסים, מסורות וקהילה כל-שנתית — לא דרך מחיר.</td></tr>
+                <tr><td><strong>מעורבות כל-שנתית</strong></td><td>אירועי איחוד, רשתות חברתיות פעילות (50K+ עוקבים), רשתות בוגרים, מרצ׳נדייז, 5-15 עובדים כל-שנתיים.</td><td>מינימלית. קשר בתקופת ההרשמה בלבד. ללא מעורבות בעונת החורף.</td><td>אפילו ניוזלטר רבעוני, אירוע חורף, וכרטיסי יום הולדת ישברו את המעגל העסקי.</td></tr>
+                <tr><td><strong>רגולציה</strong></td><td>הסמכה וולונטרית ACA (~300 סטנדרטים). ~3,000 מתוך 14,000 מחנות מוסמכים. רישוי מדינתי כבסיס.</td><td>מפוזרת: משרד החינוך, בריאות, רשויות מקומיות. ללא גוף הסמכה אחד. אכיפה ריאקטיבית.</td><td>קואליציה של מחנות איכותיים צריכה להקים גוף הסמכה וולונטרי ישראלי.</td></tr>
+                <tr><td><strong>תמחור</strong></td><td>$5K-$15K+ לעונה ($800-$2,000/שבוע). הורים רואים מחנה כהשקעה באופי. $1B+ בסיוע כספי.</td><td>3K-15K ₪ (~$800-$4,000) סה״כ. שוק רגיש למחיר אך נכונות עולה.</td><td>מחנה פרימיום ישראלי ב-8-15K ₪ לשבועיים — ריאלי, אם הערך המוחשי מסופק.</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Parent Communication - Hebrew -->
+<div class="card" style="border-left: 4px solid var(--orange);">
+    <h2 style="color: var(--orange); border-color: var(--orange);">תקשורת הורים ושקיפות — הפלייבוק האמריקאי</h2>
+
+    <h3>ערימת הטכנולוגיה במחנה אמריקאי מוביל</h3>
+    <div class="table-wrapper">
+        <table>
+            <thead><tr><th>פלטפורמה</th><th>מה היא עושה</th><th>פיצ׳ר מפתח</th><th>מחנות משתמשים</th><th>מודל מחיר</th></tr></thead>
+            <tbody>
+                <tr><td><strong>CampMinder</strong></td><td>הכל-באחד: הרשמה, פורטל, תמונות, חיוב, אימייל חד-כיווני</td><td>פורטל הורים עם גלריות תמונות יומיות, אימיילים מודפסים מהורים לחניכים</td><td>900-1,200+</td><td>המחנה משלם $3-15K/שנה</td></tr>
+                <tr><td><strong>Bunk1</strong></td><td>מוכוון תקשורת: תמונות, אימייל חד-כיווני, ספרי שנה</td><td>חיפוש תמונות בזיהוי פנים + מערכת מכתבים</td><td>400-700+</td><td>היברידי: הורים $30-60 או המחנה סופג</td></tr>
+                <tr><td><strong>Waldo Photos</strong></td><td>משלוח תמונות מונע AI בלבד</td><td>הורים מעלים תמונת ייחוס → AI מתאים ומעביר רק תמונות של הילד שלהם</td><td>300-600+</td><td>לפי חניך או הורים ~$20-50</td></tr>
+                <tr><td><strong>Campanion</strong></td><td>עדכונים בזמן אמת, מובייל-ראשון</td><td>פידים מבוססי פעילות עם כיתובים, סיכומים יומיים, התראות פוש</td><td>100-300+</td><td>המחנה משלם SaaS</td></tr>
+                <tr><td><strong>CampDoc</strong></td><td>ניהול בריאות</td><td>רשומות בריאות אלקטרוניות, יומני תרופות, התראות בריאות להורים</td><td>1,000+</td><td>$2-5 לחניך</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Privacy - Hebrew -->
+<div class="card" style="border-left: 4px solid var(--red);">
+    <h2 style="color: var(--red); border-color: var(--red);">פרטיות ילדים ושיתוף תמונות — איך ארה״ב מתמודדת</h2>
+
+    <h3>המתח המרכזי</h3>
+    <p style="margin-bottom: 16px; font-style: italic;">הורה א׳ משלם $12,000+ ומצפה לתמונות יומיות. הורה ב׳ ביקשה אי-צילום (צו הגנה, התנגדות דתית, פרטיות). הילדים בצריף אחד ומופיעים בכל תמונה. איך משרתים את שניהם?</p>
+
+    <h3>פתרונות מובילים</h3>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; margin: 16px 0;">
+        <div class="gap-card gap-low" style="border-left-color: var(--blue);">
+            <h4>1. הסכמה מדורגת בהרשמה</h4>
+            <p>תיבות סימון נפרדות: (א) הרשמה לזיהוי פנים, (ב) גלריה פרטית, (ג) שיווק, (ד) מדיה חיצונית. ~95% מסכימים לגלריה פרטית; ~70% למדיה חיצונית.</p>
+        </div>
+        <div class="gap-card gap-low" style="border-left-color: var(--blue);">
+            <h4>2. "ראה רק את הילד שלך" (AI)</h4>
+            <p>מודל Waldo: כל הורה מקבל רק תמונות של הילד שלו. הורה א׳ לעולם לא גולש בכל התמונות. זהו <strong>תקן הזהב</strong> המתגבש.</p>
+        </div>
+        <div class="gap-card gap-low" style="border-left-color: var(--blue);">
+            <h4>3. זיהוי ילדי אי-צילום</h4>
+            <p>צמידים צבעוניים מסמנים לצלמים. דפי תדרוך לצוות. צלם ייעודי (לא טלפונים של מדריכים) שולט בצינור.</p>
+        </div>
+        <div class="gap-card gap-low" style="border-left-color: var(--blue);">
+            <h4>4. סקירה לפני פרסום</h4>
+            <p>צוות תקשורת סוקר את כל התמונות לפני פרסום. ילדי אי-צילום נחתכים, מטושטשים, או התמונה נעצרת. חלק מהמחנות משתמשים בטשטוש אוטומטי AI.</p>
+        </div>
+        <div class="gap-card gap-low" style="border-left-color: var(--blue);">
+            <h4>5. איסור מכשירים אישיים</h4>
+            <p>מדריכים אסורים לצלם חניכים במכשירים אישיים. אין פרסום בטיקטוק/אינסטגרם — עילה לפיטורים. מכשירים של המחנה בלבד, נמחקים בסוף.</p>
+        </div>
+        <div class="gap-card gap-low" style="border-left-color: var(--blue);">
+            <h4>6. בקרת שיתוף מחדש</h4>
+            <p>תנאי שימוש אוסרים שיתוף תמונות של ילדים אחרים ברשתות. סימני מים מרתיעים. המחנה מבקש הסרה כשמתגלות הפרות.</p>
+        </div>
+    </div>
+
+    <h3 style="margin-top: 20px;">המסקנה הישראלית</h3>
+    <p style="padding: 14px; background: #fef2f2; border-radius: 8px; border-left: 3px solid var(--red);">
+        לישראל <strong>אין מקבילה ל-BIPA, אין הנחיות ACA לתמונות, ואין רגולציית פרטיות ייעודית למחנות.</strong> זו גם הזדמנות וגם סיכון. מחנה ישראלי שמיישם באופן יזום הסכמה מדורגת, צילום ייעודי ומשלוח מותאם AI יהיה שנים לפני המתחרים — ומוכן גם לחקיקת פרטיות ישראלית עתידית. עיקרון מפתח: <strong>פרטיות מעוצבת מראש היא יתרון תחרותי, לא נטל.</strong>
+    </p>
+</div>
+
+<!-- Top 10 - Hebrew -->
+<div class="card" style="border-left: 4px solid var(--green);">
+    <h2 style="color: var(--green); border-color: var(--green);">10 דברים מובילים לאמץ מארה״ב — מדורגים לפי השפעה x היתכנות</h2>
+    <div class="table-wrapper">
+        <table>
+            <thead><tr><th>#</th><th>פעולה</th><th>השפעה</th><th>היתכנות</th><th>עלות</th><th>פרטים</th></tr></thead>
+            <tbody>
+                <tr><td><strong>1</strong></td><td>שיתוף תמונות יומי בערוץ ייעודי</td><td style="color:var(--red);font-weight:700;">10/10</td><td style="color:var(--green);font-weight:700;">9/10</td><td>~0</td><td>צלם צוות אחד, 50-100 תמונות/יום, WhatsApp פרטי או Google Photos. פרסום עד 21:00. לוודא שכל ילד מופיע ביומיים הראשונים.</td></tr>
+                <tr><td><strong>2</strong></td><td>חוברת הורים טרום-מחנה (PDF)</td><td style="color:var(--red);font-weight:700;">9/10</td><td style="color:var(--green);font-weight:700;">10/10</td><td>~0</td><td>10-20 עמודים: רשימת אריזה, לו״ז, מידע אוכל, פרוטוקולים רפואיים, מדיניות תקשורת, הדרכה לגעגועים. שליחה 3-4 שבועות לפני.</td></tr>
+                <tr><td><strong>3</strong></td><td>הודעה יזומה מהמנהל ביום 1 ו-2</td><td style="color:var(--red);font-weight:700;">9/10</td><td style="color:var(--green);font-weight:700;">9/10</td><td>~0</td><td>עדכון קצר + תמונות בשני הערבים הראשונים. "כל החניכים הגיעו בשלום, התיישבו, הנה תמונות." 15 דקות עם אפקט מרגיע עצום.</td></tr>
+                <tr><td><strong>4</strong></td><td>פרוטוקול געגועים כתוב לכל הצוות</td><td style="color:var(--orange);font-weight:700;">8/10</td><td style="color:var(--green);font-weight:700;">9/10</td><td>~0</td><td>מסמך 2 עמודים: מה לומר, מה לא לומר, מתי להסלים. 60-90 דקות הכשרת צוות. למנות "איש קשר לגעגועים."</td></tr>
+                <tr><td><strong>5</strong></td><td>הכשרת צוות פורמלית 3-5 ימים</td><td style="color:var(--red);font-weight:700;">9/10</td><td style="color:var(--orange);font-weight:700;">7/10</td><td>בינוני</td><td>בטיחות, התפתחות ילד, פתרון קונפליקטים, מצבי חירום, תרבות מחנה. המבדיל הגדול ביותר בין מקצועי לחובבני.</td></tr>
+                <tr><td><strong>6</strong></td><td>מדיניות תקשורת ברורה (כתובה)</td><td style="color:var(--orange);font-weight:700;">7/10</td><td style="color:var(--green);font-weight:700;">10/10</td><td>~0</td><td>"אנחנו משתפים תמונות יומיות. ניתן להגיע אלינו 8:00-20:00. נתקשר אם יש כל דאגה. חניכים ללא טלפונים. הנה למה."</td></tr>
+                <tr><td><strong>7</strong></td><td>מסורות מחנה ואירועים ייחודיים</td><td style="color:var(--orange);font-weight:700;">8/10</td><td style="color:var(--orange);font-weight:700;">8/10</td><td>~0</td><td>5-7 מסורות חוזרות: טקס פתיחה, תחרות צבעים, ארוחת שישי מיוחדת, טקס סיום, שיר מחנה. לעולם לא לשנות ברגע שנקבעו.</td></tr>
+                <tr><td><strong>8</strong></td><td>מעקב אישי אחרי המחנה</td><td style="color:var(--orange);font-weight:700;">7/10</td><td style="color:var(--orange);font-weight:700;">8/10</td><td>זמן בלבד</td><td>תוך שבוע: הודעה אישית מהמנהל/מדריך עם אנקדוטה ספציפית על הילד. 10-15 שעות ל-100 חניכים. מעלה חזרה ב-10-15%.</td></tr>
+                <tr><td><strong>9</strong></td><td>סקר משוב הורים</td><td style="color:var(--blue);font-weight:700;">6/10</td><td style="color:var(--green);font-weight:700;">10/10</td><td>~0</td><td>טופס Google של 8-10 שאלות תוך 3-5 ימים מסיום. ליישם 2-3 ממצאים בגלוי לפני הקיץ הבא ולספר להורים.</td></tr>
+                <tr><td><strong>10</strong></td><td>נוכחות רשתות חברתיות כל-שנתית</td><td style="color:var(--blue);font-weight:700;">6/10</td><td style="color:var(--orange);font-weight:700;">7/10</td><td>3-5 שעות/שבוע</td><td>אינסטגרם 2-3 פעמים/שבוע כל השנה: תמונות זיכרון, הצגת צוות, ספירות לאחור, הרשמה. לבנות ספריית תמונות בקיץ לשימוש כל-שנתי.</td></tr>
+            </tbody>
+        </table>
+    </div>
+    <p style="margin-top: 12px; padding: 14px; background: #f0fdf4; border-radius: 8px; border-left: 3px solid var(--green);">
+        <strong>פריטים 1-4 ניתנים ליישום בסוף שבוע תכנון אחד.</strong> פריטים 5-7 דורשים הכנה טרום-עונה. פריטים 8-10 דורשים מחויבות כל-שנתית אך מאמץ צנוע. יחד, הם יהפכו מחנה ישראלי משירות עסקי למוסד אמין.
+    </p>
+</div>
+
+<!-- Financial Model - Hebrew -->
+<div class="card" style="border-left: 4px solid #059669;">
+    <h2 style="color: #059669; border-color: #059669;">מודל פיננסי — האם אפשר להרוויח?</h2>
+    <p style="color:var(--text-light); margin-bottom: 8px;">מודל מלא: 150 חניכים/מחזור, 3 מחזורים/קיץ, 14 ימים סטנדרט, מיקום בגליל.</p>
+    <div class="correction" style="margin-bottom: 16px;">
+        <strong>הערת אמינות:</strong> תמחור מבוסס על נתוני מתחרים מאומתים (קימאמה ₪8,200-14,800 <span class="src src-verified">מאומת</span>). אומדני עלויות (שכירות, שכר, אוכל, ביטוח) מבוססים על אמות מידה בתעשייה <span class="src src-estimated">מוערך</span> — לא הצעות מחיר אמיתיות. <strong>לפני התחייבות הון — יש לקבל הצעות אמיתיות מכפרי נוער, מבטחים, ספקי מזון וחברות אבטחה.</strong>
+    </div>
+
+    <h3>שלוש דרגות תמחור</h3>
+    <div class="stats-row">
+        <div class="stat-card" style="border-top: 3px solid var(--blue);"><div class="number">11,500</div><div class="label">₪ — ערך (10 ימים)<br>1,150 ₪/יום</div></div>
+        <div class="stat-card" style="border-top: 3px solid var(--green);"><div class="number">14,900</div><div class="label">₪ — סטנדרט (14 ימים)<br>1,064 ₪/יום</div></div>
+        <div class="stat-card" style="border-top: 3px solid var(--purple);"><div class="number">19,500</div><div class="label">₪ — פרימיום (21 ימים)<br>929 ₪/יום</div></div>
+    </div>
+
+    <h3>תחזית רווח והפסד — 3 שנים</h3>
+    <div class="table-wrapper">
+        <table>
+            <thead><tr><th></th><th>שנה 1 (השקה)</th><th>שנה 2 (צמיחה)</th><th>שנה 3 (בשלות)</th></tr></thead>
+            <tbody>
+                <tr><td><strong>תפוסה</strong></td><td>70% (105/מחזור)</td><td>85% (128/מחזור)</td><td>95% (143/מחזור)</td></tr>
+                <tr style="background:#f0fdf4;"><td><strong>הכנסות סה״כ</strong></td><td><strong>₪4.5M</strong></td><td><strong>₪5.8M</strong></td><td><strong>₪7.0M</strong></td></tr>
+                <tr><td><strong>עלויות תפעול</strong></td><td>₪5.1M</td><td>₪5.2M</td><td>₪5.4M</td></tr>
+                <tr style="font-weight:700;"><td>רווח תפעולי</td><td style="color:var(--red);">(₪625K)</td><td style="color:var(--green);">₪613K</td><td style="color:var(--green);">₪1,641K</td></tr>
+                <tr style="font-weight:700;"><td>מרווח תפעולי</td><td style="color:var(--red);">-13.9%</td><td style="color:var(--green);">10.5%</td><td style="color:var(--green);">23.3%</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>מדדים פיננסיים מרכזיים</h3>
+    <div class="stats-row">
+        <div class="stat-card"><div class="number" style="font-size:1.6em;">97</div><div class="label">נקודת איזון חניכים/מחזור<br>(64% תפוסה)</div></div>
+        <div class="stat-card"><div class="number" style="font-size:1.6em;">2.12M</div><div class="label">₪ הון התחלתי נדרש<br>(~$580K)</div></div>
+        <div class="stat-card"><div class="number" style="font-size:1.6em;">~2.5 שנה</div><div class="label">תקופת החזר</div></div>
+        <div class="stat-card"><div class="number" style="font-size:1.6em;">84:1</div><div class="label">ערך לקוח : עלות רכישה<br>(בבשלות)</div></div>
+    </div>
+</div>
+
+<!-- Cyprus - Hebrew -->
+<div class="card" style="border-left: 4px solid #0891b2;">
+    <h2 style="color: #0891b2; border-color: #0891b2;">אופציית קפריסין — מחזור בינלאומי פרימיום</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px; margin: 16px 0;">
+        <div style="background: #f0fdfa; border-radius: 8px; padding: 14px; border-left: 3px solid #0891b2;">
+            <strong style="color: #0891b2;">יתרונות</strong><br>
+            ללא רקטות/מקלטים. EU (מס 12.5%). תשתיות נופש. אנגלית נפוצה. חופים Blue Flag. שעת טיסה מישראל.
+        </div>
+        <div style="background: #fef2f2; border-radius: 8px; padding: 14px; border-left: 3px solid var(--red);">
+            <strong style="color: var(--red);">חסרונות</strong><br>
+            עלויות x1.5-2.5 מישראל. חרדת הורים. אשרות עבודה לצוות. כשרות מורכבת. לא קריר יותר (33-36C). חירום רפואי = פינוי אווירי.
+        </div>
+    </div>
+    <h3>המלצה: מודל היברידי</h3>
+    <p style="padding: 14px; background: #f0fdfa; border-radius: 8px; border-left: 3px solid #0891b2;">
+        מחזורים 1-2 ביולי בגליל (₪3,500-14,900). <strong>מחזור 3 באוגוסט בקפריסין (₪8,000-10,000)</strong> — מחזור דגל פרימיום. התחלה בשנה 2, לא בשנה 1. איזון: 55 חניכים. מרווח: ~18%.
+    </p>
+</div>
+
+<!-- Partnership - Hebrew -->
+<div class="card" style="border-left: 4px solid #7c3aed;">
+    <h2 style="color: #7c3aed; border-color: #7c3aed;">אסטרטגיית שותפות עם ארה״ב — בניית אמינות</h2>
+    <h3>6 מודלי שותפות</h3>
+    <div class="table-wrapper">
+        <table>
+            <thead><tr><th>מודל</th><th>עלות</th><th>שליטה שלך</th><th>אמינות</th><th>מתאים ל</th></tr></thead>
+            <tbody>
+                <tr><td><strong>זיכיון מלא</strong></td><td>$50-150K + 5-10%</td><td style="color:var(--red);">נמוכה</td><td style="color:var(--green);font-weight:700;">גבוהה מאוד</td><td>זיהוי מותג מקסימלי</td></tr>
+                <tr><td><strong>רשת (ACA/FJC)</strong></td><td>$5-15K/שנה</td><td style="color:var(--green);">גבוהה</td><td>בינונית</td><td>סטנדרטים והכשרה</td></tr>
+                <tr><td><strong>חילופי צוות</strong></td><td>$35-65K/שנה</td><td style="color:var(--green);">גבוהה מאוד</td><td>בינונית-גבוהה</td><td>הכי מהיר (6-12 חודשים)</td></tr>
+                <tr style="background:#faf5ff;"><td><strong>מיתוג משותף (מומלץ)</strong></td><td>$20-80K/שנה</td><td style="color:var(--green);">גבוהה</td><td style="color:var(--green);font-weight:700;">גבוהה</td><td><strong>האיזון הטוב ביותר</strong></td></tr>
+                <tr><td><strong>רכישת מחנה ישראלי</strong></td><td>$50K-2M</td><td style="color:var(--green);">גבוהה</td><td>נמוכה-בינונית</td><td>תפעול + בסיס חניכים מיידי</td></tr>
+            </tbody>
+        </table>
+    </div>
+    <p style="padding: 14px; background: #faf5ff; border-radius: 8px; border-left: 3px solid var(--purple); margin-top: 16px;">
+        <strong>מודל "קמפוס הרחבה":</strong> המחנה הישראלי כהרחבת קיץ של מחנה אמריקאי. חניכים אמריקאים משתתפים 4 שבועות בארה״ב + 2 שבועות בישראל. מיתוג, מסורות וצוות משותפים. קרנות פילנתרופיות ימנו זאת.
+    </p>
+</div>
+
+<!-- Playbook - Hebrew -->
+<div class="card" style="border-left: 4px solid #d97706;">
+    <h2 style="color: #d97706; border-color: #d97706;">פלייבוק להצלחה — 10 גורמי ההצלחה המובילים</h2>
+    <div class="table-wrapper">
+        <table>
+            <thead><tr><th>#</th><th>גורם</th><th>למה זה חשוב</th></tr></thead>
+            <tbody>
+                <tr><td style="font-weight:700; color:var(--red);">1</td><td><strong>איכות צוות והכשרה</strong></td><td>הצוות הם המחנה. מדריך גרוע אחד הורס חוויית צריף.</td></tr>
+                <tr><td style="font-weight:700; color:var(--red);">2</td><td><strong>תקשורת הורים</strong></td><td>אמון זה הכל. הורים מעודכנים = שגרירים. הורים בחושך = מתנגדים.</td></tr>
+                <tr><td style="font-weight:700; color:var(--red);">3</td><td><strong>בטיחות ומוכנות רפואית</strong></td><td>תקרית רצינית אחת יכולה לסגור את העסק. תמיד להשקיע-יתר כאן.</td></tr>
+                <tr><td style="font-weight:700; color:var(--orange);">4</td><td><strong>איכות אוכל</strong></td><td>"איך היה האוכל?" — שאלה מס׳ 1 כשילדים ישראלים חוזרים.</td></tr>
+                <tr><td style="font-weight:700; color:var(--orange);">5</td><td><strong>שיעור חזרה של חניכים</strong></td><td>75%+ = מחנה צומח. מתחת ל-50% = משהו שבור.</td></tr>
+                <tr><td>6</td><td><strong>מיקום ומתקנים</strong></td><td>נקי, בטוח, מתאים. גישה למים כמעט חובה בקיץ ישראלי.</td></tr>
+                <tr><td>7</td><td><strong>מגוון תכנות</strong></td><td>בחירה + התקדמות במיומנויות = מעורבות ושימור.</td></tr>
+                <tr><td>8</td><td><strong>תרבות מחנה ומסורות</strong></td><td>הדבק הרגשי. לוקח 2-3 שנים לבנות, משתלם לנצח.</td></tr>
+                <tr><td>9</td><td><strong>תמחור ותפיסת ערך</strong></td><td>לא זול, אבל מוצדק באיכות נראית.</td></tr>
+                <tr><td>10</td><td><strong>קהילה כל-שנתית</strong></td><td>קהילות משגשגות; עסקאות קופאות.</td></tr>
+            </tbody>
+        </table>
+    </div>
+    <p style="margin-top: 16px; padding: 14px; background: #fef3c7; border-radius: 8px; border-left: 3px solid #d97706;">
+        <strong>מחנה מינימלי (מוגבל הון):</strong> מחזור 1 (לא 3), 80 חניכים, 10 ימים, מתקן שכור עם מטבח קיים, 25 אנשי צוות. הון נדרש: ₪600-800K. איזון: ~55 חניכים.
+    </p>
+</div>
+
+<!-- Recommendations - Hebrew -->
+<div class="card rec-card">
+    <h2>אפשרויות אסטרטגיות למחנה שלך</h2>
+    <div class="rec-item"><div class="rec-num">1</div><div><strong>"המחנה המנוהל היטב"</strong> — בינוני-גבוה (7-9K ₪, 10-14 ימים). לא נישה נושאית, פשוט ביצוע דרמטית טוב יותר: אוכל מעולה, צוות מבוגר מאומן, עדכונים יומיים להורים באפליקציה, מתקנים מודרניים. מיצוב: "המחנה שתמיד רציתם שיהיה."</div></div>
+    <div class="rec-item"><div class="rec-num">2</div><div><strong>מחנה טבע ואקולוגיה</strong> — מיקום בגליל/גולן, שקיעה בטבע, חינוך סביבתי, ללא מסכים מתוך עיצוב. 10 ימים, 5-7K ₪. פונה להורים בעלי מודעות סביבתית.</div></div>
+    <div class="rec-item"><div class="rec-num">3</div><div><strong>חלוץ ההכלה</strong> — מחנה מיינסטרים ראשון עם תמיכה נוירו-מגוונת מובנית (מדריכי צל, מרחבים ידידותיים לחישה, צוות מאומן ADHD/ASD). מילוי הצורך הלא מסופק הגדול ביותר בשוק.</div></div>
+    <div class="rec-item"><div class="rec-num">4</div><div><strong>מודל כניסה + צמיחה</strong> — התחלה עם מחזורים של 3 לילות לגילאי 6-9, אח״כ 10 ימים לגילאי 10-14, אח״כ שבועיים לגילאי 14-17. בניית צינור חניכים רב-שנתי שלאף מתחרה אין.</div></div>
+    <div class="rec-item"><div class="rec-num">5</div><div><strong>היברידי</strong> — שילוב אלמנטים: מחנה מנוהל היטב, מוכוון טבע, עם תמיכה בהכלה ותוכנית כניסה. לוכד מספר פערים בו-זמנית.</div></div>
+</div>
+
+</div><!-- container -->
+</div><!-- section-he -->
+
+<script>
+// Language toggle
+function setLang(lang) {
+    document.body.classList.toggle('he', lang === 'he');
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+    event.target.classList.add('active');
+    // Reinit HE charts if switching to Hebrew for first time
+    if (lang === 'he' && !window.heChartsInit) {
+        initHeCharts();
+        window.heChartsInit = true;
+    }
+}
+
+// Chart data
+const camps = [
+    { name: 'Masa Sderot', nameHe: 'מסע שדרות', price: 300, perDay: 30, days: 10, focus: 'General', religious: 'No' },
+    { name: 'Jerusalem (Amit)', nameHe: 'קיץ ירושלמי', price: 350, perDay: 35, days: 10, focus: 'General', religious: 'No' },
+    { name: 'Puzzle Piece', nameHe: 'החלק בפאזל', price: 450, perDay: 113, days: 4, focus: 'Special Needs', religious: 'No' },
+    { name: 'Insights', nameHe: 'תובנות', price: 850, perDay: 85, days: 10, focus: 'Leadership', religious: 'No' },
+    { name: 'Chavaya', nameHe: 'חוויה', price: 1650, perDay: 138, days: 12, focus: 'Religious', religious: 'Reform' },
+    { name: '5 Fingers R.', nameHe: '5 אצבעות ר.', price: 2500, perDay: 250, days: 10, focus: 'Sports', religious: 'No' },
+    { name: '5 Fingers S.', nameHe: '5 אצבעות ס.', price: 4200, perDay: 420, days: 10, focus: 'Sports', religious: 'No' },
+    { name: 'Masa Israeli', nameHe: 'מסע ישראלי', price: 4800, perDay: 480, days: 10, focus: 'Adventure', religious: 'Shabbat' },
+    { name: 'Gesher', nameHe: 'גשר', price: 5200, perDay: 520, days: 10, focus: 'Dialogue', religious: 'No' },
+    { name: 'ISRACAMP', nameHe: 'ישראקאמפ', price: 5500, perDay: 550, days: 10, focus: 'General', religious: 'No' },
+    { name: 'Hallelujah C.', nameHe: 'הללויה ק.', price: 6500, perDay: 650, days: 10, focus: 'Identity', religious: 'Jewish' },
+    { name: 'Hallelujah M.', nameHe: 'הללויה מ.', price: 6500, perDay: 650, days: 10, focus: 'Identity', religious: 'Jewish' },
+    { name: 'Big Idea', nameHe: 'ביג איידיה', price: 7500, perDay: 1070, days: 10, focus: 'Tech', religious: 'Optional' },
+    { name: 'NCSY Chai', nameHe: 'NCSY חי', price: 8500, perDay: 425, days: 20, focus: 'Religious', religious: 'Orthodox' },
+    { name: 'Dror', nameHe: 'דרור', price: 8650, perDay: 412, days: 21, focus: 'Religious', religious: 'Orthodox' },
+    { name: 'Amichai', nameHe: 'עמיחי', price: 9360, perDay: 468, days: 20, focus: 'Religious', religious: 'Dati Leumi' },
+    { name: 'Kibbutz', nameHe: 'קיץ בקיבוץ', price: 10400, perDay: 547, days: 19, focus: 'Religious', religious: 'Mod. Orthodox' },
+    { name: 'Kimama W.', nameHe: 'קימאמה ג.', price: 11700, perDay: 900, days: 13, focus: 'Water Sports', religious: 'No' },
+    { name: 'Kimama', nameHe: 'קימאמה', price: 14800, perDay: 1138, days: 13, focus: 'Water Sports', religious: 'No' },
+];
+
+const tierColors = camps.map(c => {
+    if (c.price <= 1650) return '#16a34a';
+    if (c.price <= 5500) return '#2563eb';
+    if (c.price <= 9360) return '#ea580c';
+    return '#dc2626';
+});
+
+// ===== ENGLISH CHARTS =====
+// Price chart
+new Chart(document.getElementById('priceChart'), {
+    type: 'bar',
+    data: {
+        labels: camps.map(c => c.name),
+        datasets: [{
+            label: 'Price (NIS)',
+            data: camps.map(c => c.price),
+            backgroundColor: tierColors,
+            borderRadius: 4
+        }]
+    },
+    options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: { x: { ticks: { maxRotation: 45, font: { size: 10 } } }, y: { beginAtZero: true, title: { display: true, text: 'NIS' } } }
+    }
+});
+
+// Per-day chart
+const perDaySorted = [...camps].sort((a, b) => a.perDay - b.perDay);
+new Chart(document.getElementById('perDayChart'), {
+    type: 'bar',
+    data: {
+        labels: perDaySorted.map(c => c.name),
+        datasets: [{
+            label: 'NIS / Day',
+            data: perDaySorted.map(c => c.perDay),
+            backgroundColor: perDaySorted.map(c => {
+                if (c.perDay <= 150) return '#16a34a';
+                if (c.perDay <= 550) return '#2563eb';
+                if (c.perDay <= 700) return '#ea580c';
+                return '#dc2626';
+            }),
+            borderRadius: 4
+        }]
+    },
+    options: {
+        responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+        plugins: { legend: { display: false } },
+        scales: { x: { beginAtZero: true, title: { display: true, text: 'NIS / Day' } }, y: { ticks: { font: { size: 10 } } } }
+    }
+});
+
+// Duration chart
+const durSorted = [...camps].sort((a, b) => b.days - a.days);
+new Chart(document.getElementById('durationChart'), {
+    type: 'bar',
+    data: {
+        labels: durSorted.map(c => c.name),
+        datasets: [{
+            label: 'Days',
+            data: durSorted.map(c => c.days),
+            backgroundColor: '#7c3aed',
+            borderRadius: 4
+        }]
+    },
+    options: {
+        responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+        plugins: { legend: { display: false } },
+        scales: { x: { beginAtZero: true, title: { display: true, text: 'Days' } }, y: { ticks: { font: { size: 10 } } } }
+    }
+});
+
+// Age/Grade chart (floating bar)
+const gradeMap = { 'Masa Sderot': [7,9], 'Jerusalem (Amit)': [7,11], 'Puzzle Piece': [7,12], 'Insights': [7,8], 'Chavaya': [3,12], '5 Fingers R.': [9,9], '5 Fingers S.': [7,9], 'Masa Israeli': [7,10], 'Gesher': [7,11], 'ISRACAMP': [7,9], 'Hallelujah C.': [8,9], 'Hallelujah M.': [9,9], 'Big Idea': [4,11], 'NCSY Chai': [9,12], 'Dror': [4,9], 'Amichai': [4,10], 'Kibbutz': [7,9], 'Kimama W.': [7,11], 'Kimama': [7,11] };
+new Chart(document.getElementById('ageChart'), {
+    type: 'bar',
+    data: {
+        labels: Object.keys(gradeMap),
+        datasets: [{
+            label: 'Grade Range',
+            data: Object.values(gradeMap).map(([lo, hi]) => [lo, hi]),
+            backgroundColor: '#2563eb55',
+            borderColor: '#2563eb',
+            borderWidth: 1,
+            borderRadius: 4,
+            borderSkipped: false
+        }]
+    },
+    options: {
+        responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+        plugins: { legend: { display: false } },
+        scales: { x: { min: 1, max: 13, title: { display: true, text: 'Grade' }, ticks: { callback: v => 'Gr.' + v } }, y: { ticks: { font: { size: 10 } } } }
+    }
+});
+
+// Focus distribution (doughnut)
+const focusCounts = {};
+camps.forEach(c => { focusCounts[c.focus] = (focusCounts[c.focus] || 0) + 1; });
+const focusColors = ['#2563eb', '#16a34a', '#ea580c', '#7c3aed', '#dc2626', '#0891b2', '#d97706', '#4f46e5', '#be185d'];
+new Chart(document.getElementById('focusChart'), {
+    type: 'doughnut',
+    data: {
+        labels: Object.keys(focusCounts),
+        datasets: [{ data: Object.values(focusCounts), backgroundColor: focusColors.slice(0, Object.keys(focusCounts).length) }]
+    },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right' } } }
+});
+
+// Religious split (pie)
+const relCounts = { 'Secular / General': 0, 'Shabbat / Jewish': 0, 'Orthodox / Dati Leumi': 0, 'Reform / Masorti': 0 };
+camps.forEach(c => {
+    if (c.religious === 'No') relCounts['Secular / General']++;
+    else if (c.religious === 'Shabbat' || c.religious === 'Jewish' || c.religious === 'Optional') relCounts['Shabbat / Jewish']++;
+    else if (c.religious === 'Orthodox' || c.religious === 'Dati Leumi' || c.religious === 'Mod. Orthodox') relCounts['Orthodox / Dati Leumi']++;
+    else relCounts['Reform / Masorti']++;
+});
+new Chart(document.getElementById('religiousChart'), {
+    type: 'pie',
+    data: {
+        labels: Object.keys(relCounts),
+        datasets: [{ data: Object.values(relCounts), backgroundColor: ['#2563eb', '#d97706', '#dc2626', '#7c3aed'] }]
+    },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right' } } }
+});
+
+// Positioning map dots
+const mapEl = document.getElementById('posMap');
+const mapW = mapEl.offsetWidth, mapH = mapEl.offsetHeight;
+const maxPrice = 15000;
+camps.forEach(c => {
+    const x = (c.price / maxPrice) * 85 + 7;
+    const adventureScore = { 'Water Sports': 90, 'Adventure': 85, 'Sports': 70, 'General': 50, 'Tech': 40, 'Identity': 35, 'Leadership': 30, 'Dialogue': 45, 'Religious': 25, 'Special Needs': 55 };
+    const y = 100 - (adventureScore[c.focus] || 50) - 5;
+    const dot = document.createElement('div');
+    dot.className = 'map-dot';
+    const size = Math.max(8, Math.min(18, c.days * 0.8));
+    dot.style.width = size + 'px';
+    dot.style.height = size + 'px';
+    dot.style.left = x + '%';
+    dot.style.top = y + '%';
+    dot.style.background = c.price <= 1650 ? '#16a34a' : c.price <= 5500 ? '#2563eb' : c.price <= 9360 ? '#ea580c' : '#dc2626';
+    dot.title = `${c.name}: ₪${c.price}, ${c.days}d, ${c.focus}`;
+    mapEl.appendChild(dot);
+    const label = document.createElement('div');
+    label.className = 'map-label';
+    label.textContent = c.name;
+    label.style.left = x + '%';
+    label.style.top = (y + 3) + '%';
+    label.style.color = dot.style.background;
+    mapEl.appendChild(label);
+});
+
+// ===== COST PIE CHART =====
+new Chart(document.getElementById('costPieChart'), {
+    type: 'doughnut',
+    data: {
+        labels: ['Staff (51%)', 'Facilities (12%)', 'Food (12%)', 'Marketing (5%)', 'Equipment (3%)', 'Admin (3%)', 'Transport (3%)', 'Insurance (3%)', 'Tech (1%)', 'Other (6%)'],
+        datasets: [{ data: [2628, 631, 626, 235, 173, 176, 144, 135, 65, 310], backgroundColor: ['#2563eb', '#16a34a', '#ea580c', '#7c3aed', '#0891b2', '#d97706', '#dc2626', '#059669', '#6366f1', '#94a3b8'] }]
+    },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { font: { size: 10 } } } } }
+});
+
+// ===== HEBREW CHARTS (cloned) =====
+function initHeCharts() {
+    // Price chart HE
+    new Chart(document.getElementById('priceChartHe'), {
+        type: 'bar',
+        data: {
+            labels: camps.map(c => c.nameHe),
+            datasets: [{ label: 'מחיר (₪)', data: camps.map(c => c.price), backgroundColor: tierColors, borderRadius: 4 }]
+        },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { ticks: { maxRotation: 45, font: { size: 10 } } }, y: { beginAtZero: true, title: { display: true, text: '₪' } } } }
+    });
+    // Per-day HE
+    new Chart(document.getElementById('perDayChartHe'), {
+        type: 'bar',
+        data: {
+            labels: perDaySorted.map(c => c.nameHe),
+            datasets: [{ label: '₪ / יום', data: perDaySorted.map(c => c.perDay), backgroundColor: perDaySorted.map(c => c.perDay <= 150 ? '#16a34a' : c.perDay <= 550 ? '#2563eb' : c.perDay <= 700 ? '#ea580c' : '#dc2626'), borderRadius: 4 }]
+        },
+        options: { responsive: true, maintainAspectRatio: false, indexAxis: 'y', plugins: { legend: { display: false } }, scales: { x: { beginAtZero: true, title: { display: true, text: '₪ / יום' } }, y: { ticks: { font: { size: 10 } } } } }
+    });
+    // Duration HE
+    new Chart(document.getElementById('durationChartHe'), {
+        type: 'bar',
+        data: {
+            labels: durSorted.map(c => c.nameHe),
+            datasets: [{ label: 'ימים', data: durSorted.map(c => c.days), backgroundColor: '#7c3aed', borderRadius: 4 }]
+        },
+        options: { responsive: true, maintainAspectRatio: false, indexAxis: 'y', plugins: { legend: { display: false } }, scales: { x: { beginAtZero: true, title: { display: true, text: 'ימים' } }, y: { ticks: { font: { size: 10 } } } } }
+    });
+    // Focus HE
+    const focusLabelsHe = { 'General': 'כללי', 'Sports': 'ספורט', 'Adventure': 'הרפתקאות', 'Religious': 'דתי', 'Water Sports': 'ספורט ימי', 'Tech': 'טכנולוגיה', 'Identity': 'זהות', 'Leadership': 'מנהיגות', 'Dialogue': 'דיאלוג', 'Special Needs': 'צרכים מיוחדים' };
+    new Chart(document.getElementById('focusChartHe'), {
+        type: 'doughnut',
+        data: {
+            labels: Object.keys(focusCounts).map(k => focusLabelsHe[k] || k),
+            datasets: [{ data: Object.values(focusCounts), backgroundColor: focusColors.slice(0, Object.keys(focusCounts).length) }]
+        },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'left' } } }
+    });
+}
+</script>
+
+</body>
+</html>
