@@ -20,9 +20,9 @@
 
 ## Live Report
 
-**Current URL:** http://bejewelled-longma-f64dca.netlify.app
-**Password:** My-Drop-Site
-**Note:** Anonymous deploys expire if not claimed within 60 min. Claim via the Netlify link provided during deploy.
+**Report URL:** https://gilatnaor.github.io/israel-summer-camp-research/market-research-report.html
+**GitHub Repo:** https://github.com/gilatnaor/israel-summer-camp-research
+**Hosting:** GitHub Pages (permanent, no password, no expiration)
 
 ---
 
